@@ -1,7 +1,6 @@
-package com.funzo.Funzo_Proxy
+package com.funzo.funzoProxy.domain.subject
 
 import jakarta.persistence.*
-import org.springframework.boot.autoconfigure.domain.EntityScan
 
 
 @Entity

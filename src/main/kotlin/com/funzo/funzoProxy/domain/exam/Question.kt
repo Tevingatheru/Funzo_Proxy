@@ -1,23 +1,20 @@
-package com.funzo.Funzo_Proxy
+package com.funzo.funzoProxy.domain.exam
 
 import jakarta.persistence.*
-import org.springframework.boot.autoconfigure.domain.EntityScan
-
-
 
 @Entity
 @Table(name = "questions")
 data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int = 0,
 
     @ManyToOne
     @JoinColumn(name = "exam_code")
     val exam: Exam,
 
     @Column(unique = true, name = "code")
-    val code: String,
+    val code: String?,
 
     @Column(name = "question")
     val question: String,
@@ -28,4 +25,11 @@ data class Question(
 
     @Column(name = "image")
     val image: String
-)
+) {
+    constructor(
+        exam: Exam,
+        question: String,
+        type: QuestionType,
+        image: String
+    ) : this(0, exam, null, question, type, image)
+}

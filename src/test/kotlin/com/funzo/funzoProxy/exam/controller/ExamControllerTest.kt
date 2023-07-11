@@ -1,4 +1,4 @@
-package com.funzo.Funzo_Proxy.exam.controller
+package com.funzo.funzoProxy.exam.controller
 
 import org.junit.jupiter.api.BeforeEach
 

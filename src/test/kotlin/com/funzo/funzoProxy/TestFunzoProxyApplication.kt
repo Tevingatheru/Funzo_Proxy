@@ -1,4 +1,4 @@
-package com.funzo.Funzo_Proxy
+package com.funzo.funzoProxy
 
 import org.springframework.boot.fromApplication
 import org.springframework.boot.test.context.TestConfiguration

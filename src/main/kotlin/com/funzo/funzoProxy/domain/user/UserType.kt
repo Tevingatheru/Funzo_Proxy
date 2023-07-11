@@ -1,4 +1,4 @@
-package com.funzo.Funzo_Proxy
+package com.funzo.funzoProxy.domain.user
 
 enum class UserType {
     ADMINISTRATOR,

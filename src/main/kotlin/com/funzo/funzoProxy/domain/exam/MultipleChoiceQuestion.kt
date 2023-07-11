@@ -1,31 +1,32 @@
-package com.funzo.Funzo_Proxy
+package com.funzo.funzoProxy.domain.exam
 
 import jakarta.persistence.*
-import org.springframework.boot.autoconfigure.domain.EntityScan
-
 
 @Entity
 @Table(name = "multiple_choice_answers")
 data class MultipleChoiceQuestion(
     @Id
-    override val id: Int,
+    override val id: Int?,
 
     @ManyToOne
     @JoinColumn(name = "question_code")
-    val question: Question,
+    val question: Question?,
 
     @Column(name = "option_a")
-    val optionA: String,
+    val optionA: String?,
 
     @Column(name = "option_b")
-    val optionB: String,
+    val optionB: String?,
 
     @Column(name = "option_c")
-    val optionC: String,
+    val optionC: String?,
 
     @Column(name = "option_d")
-    val optionD: String,
+    val optionD: String?,
 
     @Column(name = "correct_option")
-    val correctOption: String
-) : QuestionType()
+    val correctOption: String?
+) : QuestionType() {
+    constructor() :
+            this(null, null, null, null, null, null, null)
+}
