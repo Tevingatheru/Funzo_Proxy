@@ -1,7 +1,6 @@
-package com.funzo.funzoProxy.infrastructure
+package com.funzo.funzoProxy.infrastructure.jpa
 
 import com.funzo.funzoProxy.domain.exam.Exam
-import com.funzo.funzoProxy.domain.exam.ExamRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
 

@@ -1,7 +1,7 @@
 package com.funzo.funzoProxy
 
-import com.funzo.funzoProxy.domain.exam.ExamRepository
-import com.funzo.funzoProxy.infrastructure.ExamRepositoryImpl
+import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
+import com.funzo.funzoProxy.infrastructure.jpa.ExamRepositoryImpl
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest

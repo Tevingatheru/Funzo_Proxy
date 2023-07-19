@@ -1,4 +1,6 @@
-package com.funzo.funzoProxy.domain.exam
+package com.funzo.funzoProxy.infrastructure.jpa
+
+import com.funzo.funzoProxy.domain.exam.Exam
 
 
 interface ExamRepository {
