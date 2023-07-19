@@ -1,4 +1,4 @@
-package com.funzo.funzoProxy.infrastructure
+package com.funzo.funzoProxy.infrastructure.jpa
 
 import com.funzo.funzoProxy.domain.exam.Exam
 import jakarta.transaction.Transactional

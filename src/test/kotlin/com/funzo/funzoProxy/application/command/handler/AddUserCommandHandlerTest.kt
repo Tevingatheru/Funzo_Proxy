@@ -1,17 +1,13 @@
 package com.funzo.funzoProxy.application.command.handler
 
-import com.funzo.funzoProxy.application.command.bus.AddUserDetailsCommand
+import com.funzo.funzoProxy.application.command.AddUserDetailsCommand
 import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.domain.user.UserType
 import com.funzo.funzoProxy.infrastructure.GenerateCodeService
-import com.funzo.funzoProxy.infrastructure.UserRepository
-import com.funzo.funzoProxy.infrastructure.UserRepositoryImpl
+import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.InjectMocks
@@ -20,16 +16,15 @@ import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations.openMocks
-import java.util.stream.Stream
 
-class AddUserDetailsCommandHandlerTest {
+class AddUserCommandHandlerTest {
     private val addUserDetailsCommand: AddUserDetailsCommand = AddUserDetailsCommand(UserType.STUDENT.toString(), "email")
 
     @Mock
     private lateinit var userRepository: UserRepository
 
     @InjectMocks
-    private lateinit var addUserDetailsCommandHandler: AddUserDetailsCommandHandler
+    private lateinit var addUserCommandHandler: AddUserCommandHandler
 
 
     @Mock
@@ -39,7 +34,7 @@ class AddUserDetailsCommandHandlerTest {
     @BeforeEach
     fun setUp() {
         openMocks(this)
-        addUserDetailsCommandHandler = AddUserDetailsCommandHandler(
+        addUserCommandHandler = AddUserCommandHandler(
             userRepositoryImpl = userRepository,
             generateCodeService = generateCodeService)
 
@@ -50,7 +45,7 @@ class AddUserDetailsCommandHandlerTest {
 
     @Test
     fun shouldHandleAddUserDetailsCommand() {
-        val user = addUserDetailsCommandHandler.handle(addUserDetailsCommand)
+        val user = addUserCommandHandler.handle(addUserDetailsCommand)
         assertThat(user.id).isNotNull()
         verify(generateCodeService).generateCodeWithLength(7)
         verify(userRepository).save(any(User::class.java))

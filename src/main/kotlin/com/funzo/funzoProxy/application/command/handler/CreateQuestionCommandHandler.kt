@@ -2,7 +2,7 @@ package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.CreateQuestionCommand
 import com.funzo.funzoProxy.domain.exam.Exam
-import com.funzo.funzoProxy.infrastructure.ExamRepository
+import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.domain.exam.Question
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component

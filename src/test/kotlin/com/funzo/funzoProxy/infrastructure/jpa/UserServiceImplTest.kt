@@ -1,4 +1,4 @@
-package com.funzo.funzoProxy.infrastructure
+package com.funzo.funzoProxy.infrastructure.jpa
 
 import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.domain.user.UserType
@@ -10,31 +10,32 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 @DataJpaTest
-class UserRepositoryImplTest
+class UserServiceImplTest
 {
     @Autowired
     private lateinit var userRepository: UserRepository
 
     private lateinit var user: User
-    private lateinit var userRepositoryService: UserRepositoryImpl
+
+    private lateinit var userServiceImpl: UserServiceImpl
 
     @BeforeEach
     fun setUp() {
         user = User( "CODE01", UserType.STUDENT, "tg@test.com")
-        userRepositoryService = UserRepositoryImpl(userRepository)
+        userServiceImpl = UserServiceImpl(userRepository)
     }
 
     @Test
-    fun shouldFindByCode() {
+    fun shouldFindUserByCode() {
         val savedUser = userRepository.save(user)
         assertThat(savedUser.id).isNotNull()
-        val foundUser = userRepositoryService.findByCode(savedUser.code)
+        val foundUser = userServiceImpl.findByCode(savedUser.code)
         assertThat(foundUser.code).isEqualTo(savedUser.code)
     }
 
     @Test
     fun shouldSaveUserSuccessfully() {
-        val savedUser = userRepositoryService.save(user)
+        val savedUser = userServiceImpl.save(user)
         assertThat(savedUser.id).isNotNull()
     }
 
@@ -42,7 +43,7 @@ class UserRepositoryImplTest
     fun shouldDeleteByCode() {
         val savedUser = userRepository.save(user)
         assertThat(savedUser.id).isNotNull()
-        val foundUser = userRepositoryService.deleteByCode(savedUser.code)
+        val foundUser = userServiceImpl.deleteByCode(savedUser.code)
         assertThat(foundUser).isEqualTo("OK")
         val allUsers = userRepository.findAll()
         assertThat(allUsers.isEmpty()).isTrue()

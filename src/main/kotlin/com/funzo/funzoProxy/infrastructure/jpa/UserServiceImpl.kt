@@ -1,13 +1,11 @@
-package com.funzo.funzoProxy.infrastructure
+package com.funzo.funzoProxy.infrastructure.jpa
 
 import com.funzo.funzoProxy.domain.user.User
-import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.stereotype.Service
 import java.lang.RuntimeException
 
-@Repository
-@Transactional
-class UserRepositoryImpl(private val userRepository: UserRepository){
+@Service
+class UserServiceImpl(private val userRepository: UserRepository){
     fun findByCode(code: String): User {
         try {
             return userRepository.findByCode(code)
