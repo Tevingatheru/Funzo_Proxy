@@ -1,7 +1,9 @@
 package com.funzo.funzoProxy
 
 import com.funzo.funzoProxy.domain.exam.ExamRepository
+import com.funzo.funzoProxy.domain.user.UserRepository
 import com.funzo.funzoProxy.infrastructure.ExamRepositoryImpl
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -15,6 +17,9 @@ class TestContainerConfig {
     fun examRepository(): ExamRepository {
         return ExamRepositoryImpl()
     }
+
+    @MockBean
+    private lateinit var userRepository: UserRepository
 
     companion object {
         @Container

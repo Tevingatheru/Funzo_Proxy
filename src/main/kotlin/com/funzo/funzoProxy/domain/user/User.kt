@@ -8,7 +8,7 @@ import jakarta.persistence.*
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Int?,
 
     @Column(unique = true, name = "code")
     val code: String,
@@ -19,4 +19,8 @@ data class User(
 
     @Column(name = "email")
     val email: String
-)
+) {
+    constructor(code: String, userType: UserType, email: String) : this(
+        null, code = code, type = userType, email = email
+    )
+}
