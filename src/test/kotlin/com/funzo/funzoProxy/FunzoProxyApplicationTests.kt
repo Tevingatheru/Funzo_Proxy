@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy
 
-import com.funzo.funzoProxy.domain.exam.ExamRepository
+import com.funzo.funzoProxy.infrastructure.ExamRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

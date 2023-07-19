@@ -1,7 +1,6 @@
 package com.funzo.funzoProxy.infrastructure
 
 import com.funzo.funzoProxy.domain.user.User
-import com.funzo.funzoProxy.domain.user.UserRepository
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.lang.RuntimeException

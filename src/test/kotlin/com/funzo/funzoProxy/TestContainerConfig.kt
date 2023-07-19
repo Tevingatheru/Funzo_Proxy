@@ -1,7 +1,7 @@
 package com.funzo.funzoProxy
 
-import com.funzo.funzoProxy.domain.exam.ExamRepository
-import com.funzo.funzoProxy.domain.user.UserRepository
+import com.funzo.funzoProxy.infrastructure.ExamRepository
+import com.funzo.funzoProxy.infrastructure.UserRepository
 import com.funzo.funzoProxy.infrastructure.ExamRepositoryImpl
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.Bean

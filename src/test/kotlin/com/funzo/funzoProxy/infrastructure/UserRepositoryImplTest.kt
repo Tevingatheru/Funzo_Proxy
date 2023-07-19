@@ -1,7 +1,6 @@
 package com.funzo.funzoProxy.infrastructure
 
 import com.funzo.funzoProxy.domain.user.User
-import com.funzo.funzoProxy.domain.user.UserRepository
 import com.funzo.funzoProxy.domain.user.UserType
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.BeforeEach

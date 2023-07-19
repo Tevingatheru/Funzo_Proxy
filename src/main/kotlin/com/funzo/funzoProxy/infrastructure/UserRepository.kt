@@ -1,5 +1,6 @@
-package com.funzo.funzoProxy.domain.user
+package com.funzo.funzoProxy.infrastructure
 
+import com.funzo.funzoProxy.domain.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
