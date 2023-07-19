@@ -2,17 +2,24 @@ package com.funzo.funzoProxy
 
 import com.funzo.funzoProxy.domain.exam.ExamRepository
 import com.funzo.funzoProxy.infrastructure.ExamRepositoryImpl
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
-@Configuration
+@Testcontainers
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration
+@ExtendWith(SpringExtension::class)
 class TestContainerConfig {
     @Bean
-    fun examRepository(): ExamRepository {
+    private fun examRepository(): ExamRepository {
         return ExamRepositoryImpl()
     }
 
