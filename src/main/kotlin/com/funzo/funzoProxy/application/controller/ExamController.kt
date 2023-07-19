@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/exams")
-class ExamController(private val commandBus: CommandBus)  {
+class ExamController(private val commandBus: CommandBus) {
     @PostMapping
     fun createExam(@RequestBody request: CreateExamRequest): ResponseEntity<String> {
         val command = CreateExamCommand(
