@@ -42,7 +42,7 @@ class SubjectServiceImplTest {
 
     @Test
     fun shouldCallSaveWhenSavingSubject() {
-        val subject = subjectServiceImpl.createSubject(createSubjectCommand = createSubjectCommand)
+        subjectServiceImpl.createSubject(createSubjectCommand = createSubjectCommand)
         verify(subjectRepository).save(any())
     }
 
@@ -51,18 +51,19 @@ class SubjectServiceImplTest {
 
         @Test
         fun shouldFindSubject() {
-            val subject = subjectServiceImpl.updateSubjectDetails(subjectCode)
+            subjectServiceImpl.updateSubjectDetails(subjectCode)
             verify(subjectRepository).findByCode(anyString())
         }
 
         @Test
         fun shouldUpdateSubject() {
-            val subject = subjectServiceImpl.updateSubjectDetails(subjectCode)
+            subjectServiceImpl.updateSubjectDetails(subjectCode)
             verify(subjectRepository).save(any())
         }
     }
+
     @Test
-    fun deleteSubjectByCode() {
+    fun shouldCallDeleteSubjectByCode() {
         subjectServiceImpl.deleteSubjectByCode(subjectCode)
         verify(subjectRepository).deleteByCode(anyString())
     }

@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service
 import java.lang.RuntimeException
 
 @Service
-class SubjectServiceImpl(private val subjectRepository: SubjectRepository) : SubjectService {
+class SubjectServiceImpl() : SubjectService {
+    private lateinit var subjectRepository: SubjectRepository
+    constructor(subjectRepository: SubjectRepository) : this(){
+        this.subjectRepository = subjectRepository
+    }
 
     override fun createSubject(createSubjectCommand: CreateSubjectCommand): Subject {
         try {
