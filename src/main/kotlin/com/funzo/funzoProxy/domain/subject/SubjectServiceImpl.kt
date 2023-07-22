@@ -36,9 +36,9 @@ class SubjectServiceImpl() : SubjectService {
         }
     }
 
-    override fun deleteSubjectByCode(code: String): Subject {
+    override fun deleteSubjectByCode(code: String) {
         try {
-            return subjectRepository.deleteByCode(code)
+            subjectRepository.deleteByCode(code)
         } catch (e: Exception) {
             throw RuntimeException("Unable to delete subject by code: $code")
         }

@@ -4,8 +4,6 @@ import com.funzo.funzoProxy.application.command.CreateExamCommand
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.domain.exam.Question
-import com.funzo.funzoProxy.domain.subject.Subject
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Component
 
 @Component

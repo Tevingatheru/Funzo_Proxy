@@ -1,12 +1,9 @@
 package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
-import com.funzo.funzoProxy.domain.subject.Subject
 import com.funzo.funzoProxy.domain.subject.SubjectServiceImpl
-import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 
 import org.junit.jupiter.params.provider.Arguments
@@ -15,7 +12,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.openMocks
-import org.mockito.Spy
 import java.util.stream.Stream
 
 class CreateSubjectCommandHandlerTest {
