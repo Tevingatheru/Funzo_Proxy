@@ -1,7 +1,7 @@
 package com.funzo.funzoProxy.application.controller
 
 import com.funzo.funzoProxy.application.command.CreateExamCommand
-import com.funzo.funzoProxy.application.command.CreateQuestionCommand
+import com.funzo.funzoProxy.application.command.AddQuestionCommand
 import com.funzo.funzoProxy.application.controller.request.CreateExamRequest
 import com.funzo.funzoProxy.application.command.handler.CommandBusImpl
 import org.springframework.http.ResponseEntity
@@ -18,7 +18,7 @@ class ExamController(private val commandBusImpl: CommandBusImpl)  {
         val command = CreateExamCommand(
             request.level,
             request.questions.map {
-                CreateQuestionCommand(it.questionText, it.image, it.questionType)
+                AddQuestionCommand(it.questionText, it.image, it.questionType)
             }
         )
 

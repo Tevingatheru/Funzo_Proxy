@@ -28,6 +28,6 @@ data class Exam(
     constructor(level: Int) : this(null, null, null, level, null)
 
     fun addQuestion(question: Question) {
-        questions?.add(question)
+        questions!!.add(question)
     }
 }

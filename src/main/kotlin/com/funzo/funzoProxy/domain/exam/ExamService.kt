@@ -1,11 +1,14 @@
 package com.funzo.funzoProxy.domain.exam
 
-import org.springframework.stereotype.Repository
+import com.funzo.funzoProxy.application.command.CreateExamCommand
+import com.funzo.funzoProxy.application.command.AddQuestionCommand
 import org.springframework.stereotype.Service
 
 @Service
 interface ExamService {
     fun findByCode(examCode: String): Exam?
-    fun save(exam: Exam): Exam
+    fun save(createExamCommand: CreateExamCommand): Exam
+    fun delete(examCode: String)
+    fun addQuestions(command: AddQuestionCommand): Exam
 
 }
