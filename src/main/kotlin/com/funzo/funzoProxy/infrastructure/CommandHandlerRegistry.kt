@@ -2,35 +2,51 @@ package com.funzo.funzoProxy.infrastructure
 
 import com.funzo.funzoProxy.application.command.bus.Command
 import com.funzo.funzoProxy.application.command.handler.CommandHandler
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.core.GenericTypeResolver
 import org.springframework.stereotype.Component
+import java.lang.RuntimeException
 
+
+/**
+ * Registry for Command Handlers. This class manages the mapping between command classes and their respective handlers.
+ * It automatically discovers and registers Command Handlers using Spring's ApplicationContext.
+ */
 @Component
-class CommandHandlerRegistry(applicationContext: ApplicationContext) {
-    private val providerMap =
-        HashMap<Class<out Command<*>?>, CommandHandlerProvider<*>>()
+class CommandHandlerRegistry @Autowired constructor(
+    applicationContext: ApplicationContext
+) {
+    private val providerMap = HashMap<Class<out Command<*>>, CommandHandlerProvider<*>>()
 
+    /**
+     * Initializes the CommandHandlerRegistry by discovering and registering Command Handlers from the ApplicationContext.
+     * @param applicationContext The Spring ApplicationContext used for discovering Command Handlers.
+     */
     init {
-        val names: Array<String> = applicationContext.getBeanNamesForType(CommandHandler::class.java)
-        for (name in names) {
-            register(applicationContext, name)
-        }
+        applicationContext.getBeansOfType(CommandHandler::class.java)
+            .forEach { (_, handler) -> register(applicationContext, handler) }
     }
 
-    private fun register(applicationContext: ApplicationContext, name: String) {
-        val handlerClass: Class<CommandHandler<*, *>> =
-            (applicationContext.getType(name) as Class<CommandHandler<*, *>>?)!!
-        val generics = GenericTypeResolver.resolveTypeArguments(
-            handlerClass,
-            CommandHandler::class.java
-        )!!
-        val commandType = generics[1] as Class<out Command<*>?>
-        providerMap[commandType] = CommandHandlerProvider(applicationContext, handlerClass)
+    /**
+     * Registers a Command Handler in the registry.
+     * @param applicationContext The Spring ApplicationContext.
+     * @param handler The Command Handler to be registered.
+     */
+    private fun register(applicationContext: ApplicationContext, handler: CommandHandler<*, *>) {
+        val generics = GenericTypeResolver.resolveTypeArguments(handler::class.java, CommandHandler::class.java)
+        val commandType = generics?.get(1) as? Class<out Command<*>?>
+        commandType?.let { providerMap[it] = CommandHandlerProvider(applicationContext, handler::class.java as Class<CommandHandler<*, *>>) }
     }
 
-    operator fun <R,  C : Command<R>?> get(commandClass: Class<C>): CommandHandler<R, Command<R>> {
-        return providerMap.get(key = commandClass)?.get() as CommandHandler<R, Command<R>>
+    /**
+     * Retrieves the Command Handler associated with the specified command class.
+     * @param commandClass The command class for which the handler is to be retrieved.
+     * @return The Command Handler for the specified command class.
+     * @throws RuntimeException if no handler is found for the specified command class.
+     */
+    operator fun <R, C : Command<R>> get(commandClass: Class<out C>): CommandHandler<*, *> {
+        return providerMap[commandClass]?.get() ?: throw RuntimeException("Handler not found for command: ${commandClass.simpleName}")
     }
 }
 

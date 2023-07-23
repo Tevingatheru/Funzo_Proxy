@@ -1,15 +1,13 @@
 package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.CreateExamCommand
-import com.funzo.funzoProxy.application.command.CreateQuestionCommand
+import com.funzo.funzoProxy.application.command.bus.Command
 import com.funzo.funzoProxy.application.controller.response.CreateExamCommandResponse
-import com.funzo.funzoProxy.application.controller.response.CreateQuestionCommandResponse
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.domain.exam.ExamService
 import com.funzo.funzoProxy.domain.exam.Question
 import jakarta.transaction.Transactional
 import lombok.NoArgsConstructor
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,4 +27,5 @@ class CreateExamCommandHandler(private val examService: ExamService): CommandHan
     private fun mapToResponse(save: Exam): CreateExamCommandResponse {
         TODO("Not yet implemented")
     }
+
 }
