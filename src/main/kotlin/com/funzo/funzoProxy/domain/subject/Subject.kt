@@ -14,11 +14,11 @@ data class Subject(
     val code: String,
 
     @Column(name = "name")
-    val name: String,
+    var name: String,
 
     @Column(name = "description")
-    val description: String,
+    var description: String,
 
     @Column(name = "category")
-    val category: String
+    var category: String
 )

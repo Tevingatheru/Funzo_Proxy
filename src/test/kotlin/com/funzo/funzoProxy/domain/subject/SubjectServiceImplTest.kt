@@ -1,6 +1,7 @@
 package com.funzo.funzoProxy.domain.subject
 
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
+import com.funzo.funzoProxy.application.command.UpdateSubjectCommand
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,9 +19,7 @@ class SubjectServiceImplTest {
         const val subjectCategory = "Science"
         private val createSubjectCommand: CreateSubjectCommand =
             CreateSubjectCommand(subjectName, subjectDescription, subjectCategory)
-
         const val subjectCode = "CODE"
-
     }
 
     @Mock
@@ -49,15 +48,27 @@ class SubjectServiceImplTest {
     @Nested
     inner class WhenUpdatingSubjectDetails {
 
+        private val command = UpdateSubjectCommand(subjectName, subjectCategory, subjectDescription, subjectCode)
+
         @Test
         fun shouldFindSubject() {
-            subjectServiceImpl.updateSubjectDetails(subjectCode)
+            subjectServiceImpl.updateSubjectDetails(
+                command.code,
+                command.category,
+                command.description,
+                command.description
+            )
             verify(subjectRepository).findByCode(anyString())
         }
 
         @Test
         fun shouldUpdateSubject() {
-            subjectServiceImpl.updateSubjectDetails(subjectCode)
+            subjectServiceImpl.updateSubjectDetails(
+                command.code,
+                command.category,
+                command.description,
+                command.description
+            )
             verify(subjectRepository).save(any())
         }
     }

@@ -27,9 +27,18 @@ class SubjectServiceImpl() : SubjectService {
         }
     }
 
-    override fun updateSubjectDetails(code: String): Subject {
+    override fun updateSubjectDetails(code: String, category: String, description: String, name: String): Subject {
         try {
             val subject = subjectRepository.findByCode(code)
+            if (category.isNotEmpty()) {
+                subject.category = category
+            }
+            if (description.isNotEmpty()) {
+                subject.description = description
+            }
+            if (name.isNotEmpty()) {
+                subject.name = name
+            }
             return subjectRepository.save(subject)
         } catch (e: Exception) {
             throw RuntimeException("Unable to update subject with code: $code")

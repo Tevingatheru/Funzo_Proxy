@@ -15,6 +15,6 @@ class CreateExamCommandHandler(private val examRepository: ExamRepository) {
             val question = Question(exam, questionCommand.questionText, questionCommand.questionType, questionCommand.image)
             exam.addQuestion(question)
         }
-        return examRepository.save(exam)
+        examRepository.save(exam)
     }
 }

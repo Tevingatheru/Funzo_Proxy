@@ -42,7 +42,7 @@ class SubjectController(private val commandBus: CommandBus, private val subjectS
     fun updateSubjectDetails(@RequestBody updateSubjectRequest: UpdateSubjectRequest) {
         try {
             val updateSubjectCommand: UpdateSubjectCommand = UpdateSubjectCommand(
-            updateSubjectRequest.name, updateSubjectRequest.category, updateSubjectRequest.description)
+            updateSubjectRequest.name, updateSubjectRequest.category, updateSubjectRequest.description,updateSubjectRequest.code)
 
             commandBus.dispatch(updateSubjectCommand)
         } catch (e: Exception) {

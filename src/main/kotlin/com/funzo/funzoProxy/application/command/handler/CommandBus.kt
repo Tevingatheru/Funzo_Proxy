@@ -7,9 +7,9 @@ import kotlin.reflect.KClass
 @Component
 class CommandBus(private val handlers: Map<KClass<out Command>, CommandHandler<out Command>>) {
 
-    fun <C : Command> dispatch(command: C): Any {
+    fun <C : Command> dispatch(command: C) {
         val handler = handlers[command::class] as? CommandHandler<C>
             ?: throw IllegalArgumentException("No handler found for command: ${command::class.simpleName}")
-        return handler.handle(command)
+        handler.handle(command)
     }
 }
