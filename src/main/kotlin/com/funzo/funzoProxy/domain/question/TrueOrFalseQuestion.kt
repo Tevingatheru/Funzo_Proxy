@@ -1,4 +1,4 @@
-package com.funzo.funzoProxy.domain.exam
+package com.funzo.funzoProxy.domain.question
 
 import jakarta.persistence.*
 

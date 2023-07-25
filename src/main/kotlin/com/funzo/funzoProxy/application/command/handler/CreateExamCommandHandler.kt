@@ -1,11 +1,10 @@
 package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.CreateExamCommand
-import com.funzo.funzoProxy.application.command.bus.Command
 import com.funzo.funzoProxy.application.controller.response.CreateExamCommandResponse
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.domain.exam.ExamService
-import com.funzo.funzoProxy.domain.exam.Question
+import com.funzo.funzoProxy.domain.question.Question
 import jakarta.transaction.Transactional
 import lombok.NoArgsConstructor
 import org.springframework.stereotype.Service

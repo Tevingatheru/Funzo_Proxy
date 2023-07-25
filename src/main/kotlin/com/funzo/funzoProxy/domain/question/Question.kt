@@ -1,5 +1,6 @@
-package com.funzo.funzoProxy.domain.exam
+package com.funzo.funzoProxy.domain.question
 
+import com.funzo.funzoProxy.domain.exam.Exam
 import jakarta.persistence.*
 
 @Entity
