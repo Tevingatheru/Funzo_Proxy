@@ -1,7 +1,6 @@
 package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.CreateQuestionCommand
-import com.funzo.funzoProxy.application.command.bus.Command
 import com.funzo.funzoProxy.application.controller.response.CreateQuestionCommandResponse
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.domain.exam.ExamService

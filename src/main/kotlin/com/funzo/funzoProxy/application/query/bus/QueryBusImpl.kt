@@ -4,7 +4,6 @@ import com.funzo.funzoProxy.application.query.Query
 import com.funzo.funzoProxy.application.query.handler.QueryHandler
 import com.funzo.funzoProxy.infrastructure.registry.QueryHandlerRegistry
 
-
 class QueryBusImpl (
     private val queryHandlerRegistry: QueryHandlerRegistry
 ): QueryBus {
