@@ -1,23 +1,22 @@
 package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.CreateQuestionCommand
+import com.funzo.funzoProxy.application.command.bus.Command
+import com.funzo.funzoProxy.application.controller.response.CreateQuestionCommandResponse
 import com.funzo.funzoProxy.domain.exam.Exam
-import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
-import com.funzo.funzoProxy.domain.exam.Question
+import com.funzo.funzoProxy.domain.exam.ExamService
 import jakarta.transaction.Transactional
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
-class CreateQuestionCommandHandler(private val examRepository: ExamRepository) {
+@Service
+class CreateQuestionCommandHandler(private val examService: ExamService): CommandHandler<CreateQuestionCommandResponse, CreateQuestionCommand> {
 
     @Transactional
-    fun handle(command: CreateQuestionCommand) {
-        val exam: Exam = examRepository.findByCode(command.examCode!!)
-            ?: throw IllegalArgumentException("Exam not found for code: ${command.examCode}")
+    override fun handle(command: CreateQuestionCommand): CreateQuestionCommandResponse {
+        TODO("Not yet implemented")
+    }
 
-        val question = Question( exam, command.questionText, command.questionType, command.image)
-        exam.addQuestion(question)
-
-        examRepository.save(exam)
+    private fun mapToResponse(save: Exam): CreateQuestionCommandResponse {
+        TODO("Not yet implemented")
     }
 }

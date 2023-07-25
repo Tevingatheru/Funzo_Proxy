@@ -1,11 +1,8 @@
 package com.funzo.funzoProxy
 
-import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
-import com.funzo.funzoProxy.infrastructure.jpa.ExamRepositoryImpl
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Bean
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -18,10 +15,6 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @EnableAutoConfiguration
 @ExtendWith(SpringExtension::class)
 class TestContainerConfig {
-    @Bean
-    private fun examRepository(): ExamRepository {
-        return ExamRepositoryImpl()
-    }
 
     companion object {
         @Container
