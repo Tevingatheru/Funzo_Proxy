@@ -3,7 +3,7 @@ package com.funzo.funzoProxy.application.controller
 import com.funzo.funzoProxy.application.command.CreateExamCommand
 import com.funzo.funzoProxy.application.command.CreateQuestionCommand
 import com.funzo.funzoProxy.application.controller.request.CreateExamRequest
-import com.funzo.funzoProxy.application.command.handler.CommandBusImpl
+import com.funzo.funzoProxy.application.command.bus.CommandBusImpl
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
