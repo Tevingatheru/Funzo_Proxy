@@ -8,7 +8,7 @@ import jakarta.persistence.*
 data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+    val id: Long?,
 
     @ManyToOne
     @JoinColumn(name = "exam_code")
@@ -18,14 +18,14 @@ data class Question(
     val code: String?,
 
     @Column(name = "question")
-    val question: String,
+    var question: String?,
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinColumn(name = "question_type_code")
-    val type: QuestionType,
+    var type: QuestionType?,
 
     @Column(name = "image")
-    val image: String
+    var image: String?
 ) {
     constructor(
         exam: Exam,
@@ -33,4 +33,7 @@ data class Question(
         type: QuestionType,
         image: String
     ) : this(0, exam, null, question, type, image)
+
+    constructor(): this(null, Exam(), null, null, null, null)
+
 }
