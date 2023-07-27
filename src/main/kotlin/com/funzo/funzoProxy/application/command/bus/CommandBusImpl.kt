@@ -1,8 +1,8 @@
-package com.funzo.funzoProxy.application.command.handler
+package com.funzo.funzoProxy.application.command.bus
 
-import com.funzo.funzoProxy.application.command.CommandBus
-import com.funzo.funzoProxy.application.command.bus.Command
-import com.funzo.funzoProxy.infrastructure.CommandHandlerRegistry
+import com.funzo.funzoProxy.application.command.Command
+import com.funzo.funzoProxy.application.command.handler.CommandHandler
+import com.funzo.funzoProxy.infrastructure.registry.CommandHandlerRegistry
 import org.springframework.stereotype.Component
 
 @Component

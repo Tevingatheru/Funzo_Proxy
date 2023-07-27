@@ -1,6 +1,6 @@
-package com.funzo.funzoProxy.infrastructure
+package com.funzo.funzoProxy.infrastructure.registry
 
-import com.funzo.funzoProxy.application.command.bus.Command
+import com.funzo.funzoProxy.application.command.Command
 import com.funzo.funzoProxy.application.command.handler.CommandHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
