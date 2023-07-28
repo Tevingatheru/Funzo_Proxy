@@ -12,7 +12,7 @@ data class Exam(
     val id: Int?,
 
     @ManyToOne
-    @JoinColumn(name = "subject_code")
+    @JoinColumn(name = "subject_code", referencedColumnName = "code")
     var subject: Subject?,
 
     @Column(unique = true, name = "code")
