@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.core.GenericTypeResolver
 import org.springframework.stereotype.Component
 import java.lang.RuntimeException
+import kotlin.reflect.KClass
 
 
 /**
@@ -38,8 +39,8 @@ class CommandHandlerRegistry @Autowired constructor(
      */
     private fun register(applicationContext: ApplicationContext, commandHandlerClass:Class<CommandHandler<*, *>>) {
         val generics = GenericTypeResolver.resolveTypeArguments(commandHandlerClass, CommandHandler::class.java)
-        val commandType = generics?.get(1) as? Class<out Command<*>?>
-        commandType?.let { providerMap[it] = CommandHandlerProvider(applicationContext, commandHandlerClass::class.java as Class<CommandHandler<*, *>>) }
+        val commandType = generics?.get(1) as Class<out Command<*>>
+        commandType.let { providerMap[it] = CommandHandlerProvider(applicationContext, commandHandlerClass) }
     }
 
     /**
@@ -52,5 +53,3 @@ class CommandHandlerRegistry @Autowired constructor(
         return providerMap[commandClass]?.get() ?: throw RuntimeException("Handler not found for command: ${commandClass.simpleName}")
     }
 }
-
-

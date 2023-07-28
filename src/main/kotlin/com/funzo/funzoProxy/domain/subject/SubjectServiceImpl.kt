@@ -3,15 +3,15 @@ package com.funzo.funzoProxy.domain.subject
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
 
 @Service
-class SubjectServiceImpl() : SubjectService {
-    private lateinit var subjectRepository: SubjectRepository
-    constructor(subjectRepository: SubjectRepository) : this(){
-        this.subjectRepository = subjectRepository
-    }
+class SubjectServiceImpl(
+    @Autowired private val subjectRepository: SubjectRepository
+) : SubjectService {
+
 
     override fun createSubject(createSubjectCommand: CreateSubjectCommand): Subject {
         try {
