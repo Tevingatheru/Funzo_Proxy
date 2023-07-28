@@ -1,5 +1,5 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-class GetSubjectByCodeQueryDto(category: String, code: String, description: String, name: String) {
+data class GetSubjectByCodeQueryDto(val category: String, val code: String, val description: String, val name: String) {
 
 }

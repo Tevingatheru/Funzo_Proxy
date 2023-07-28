@@ -19,10 +19,10 @@ class CreateSubjectCommandHandler(private val subjectServiceImpl: SubjectService
 
     private fun mapToDto(subject: Subject): CreateSubjectDto {
         return CreateSubjectDto(
-            category = subject.category,
-            code = subject.code,
-            description = subject.description,
-            name = subject.name
+            category = subject.category!!,
+            code = subject.code!!,
+            description = subject.description!!,
+            name = subject.name!!
         )
     }
 

@@ -16,6 +16,10 @@ class GetSubjectByCodeQueryHandler (private val subjectService: SubjectService)
     }
 
     private fun mapToDto(subject: Subject): GetSubjectByCodeQueryDto {
-        return GetSubjectByCodeQueryDto(category = subject.category, code = subject.code, description = subject.description, name = subject.name)
+        return GetSubjectByCodeQueryDto(
+            category = subject.category!!,
+            code = subject.code!!,
+            description = subject.description!!,
+            name = subject.name!!)
     }
 }

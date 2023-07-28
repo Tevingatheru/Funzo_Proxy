@@ -15,9 +15,9 @@ class UpdateSubjectCommandHandler (
 
     private fun mapToDto(subject: Subject): UpdateSubjectDto {
         return UpdateSubjectDto(
-            category = subject.category,
-            code = subject.code,
-            description = subject.description,
-            name = subject.name)
+            category = subject.category!!,
+            code = subject.code!!,
+            description = subject.description!!,
+            name = subject.name!!)
     }
 }

@@ -61,14 +61,15 @@ class SubjectController(
         }
     }
 
-    @GetMapping
-    fun getSubjectByCode(@RequestParam("code") code: String) : ResponseEntity<Any> {
+    @GetMapping(produces = [])
+    fun getSubjectByCode(@RequestParam("code") code: String)
+    :  GetSubjectByCodeQueryDto {
         return try {
             val getSubjectByCodeQuery: GetSubjectByCodeQuery = GetSubjectByCodeQuery(
                 code = code
             )
 
-            ResponseEntity.ok(queryBus.execute(getSubjectByCodeQuery))
+             queryBus.execute(getSubjectByCodeQuery)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
