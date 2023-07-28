@@ -1,5 +1,6 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-class UpdateSubjectDto(category: String, code: String, description: String, name: String) {
+data class UpdateSubjectDto(val category: String, val code : String, val description: String,
+                            val name : String) {
 
 }

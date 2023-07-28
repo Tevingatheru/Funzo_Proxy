@@ -5,6 +5,7 @@ import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.LogLevel
 import com.funzo.funzoProxy.infrastructure.LoggerUtils
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -12,10 +13,10 @@ import org.springframework.stereotype.Service
 import java.lang.RuntimeException
 
 @Service
+@Transactional()
 class SubjectServiceImpl(
     @Autowired private val subjectRepository: SubjectRepository
 ) : SubjectService {
-
 
     override fun createSubject(createSubjectCommand: CreateSubjectCommand): Subject {
         try {
