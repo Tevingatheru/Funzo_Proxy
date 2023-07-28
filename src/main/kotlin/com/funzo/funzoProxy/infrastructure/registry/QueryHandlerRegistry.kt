@@ -13,12 +13,12 @@ class QueryHandlerRegistry{
     fun init (applicationContext: ApplicationContext) {
         val names: Array<String> = applicationContext.getBeanNamesForType(QueryHandler::class.java)
         for (name in names) {
-            register(applicationContext, name)
+            val queryHandlerClass = applicationContext.getType(name) as Class<QueryHandler<*, *>>
+            register(applicationContext, queryHandlerClass)
         }
     }
 
-    private fun register(applicationContext: ApplicationContext, name: String) {
-        val queryHandlerClass = applicationContext.getType(name) as Class<QueryHandler<*, *>>
+    private fun register(applicationContext: ApplicationContext, queryHandlerClass: Class<QueryHandler<*, *>>) {
         val arrayOfQueryHandlers = GenericTypeResolver.resolveTypeArguments(queryHandlerClass, QueryHandler::class.java)
         val queryType = arrayOfQueryHandlers?.get(1) as Class<out Query<*>>
         queryProviderMap[queryType] = QueryHandlerProvider(applicationContext, queryHandlerClass)

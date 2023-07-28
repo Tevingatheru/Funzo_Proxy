@@ -1,5 +1,6 @@
-package com.funzo.funzoProxy.domain.exam
+package com.funzo.funzoProxy.domain.question
 
+import com.funzo.funzoProxy.domain.exam.Exam
 import jakarta.persistence.*
 
 @Entity
@@ -7,10 +8,10 @@ import jakarta.persistence.*
 data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+    val id: Long = 0,
 
     @ManyToOne
-    @JoinColumn(name = "exam_code")
+    @JoinColumn(name = "exam_code", referencedColumnName = "code")
     val exam: Exam,
 
     @Column(unique = true, name = "code")
