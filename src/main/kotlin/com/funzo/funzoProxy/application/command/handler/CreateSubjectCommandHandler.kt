@@ -3,14 +3,27 @@ package com.funzo.funzoProxy.application.command.handler
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
 import com.funzo.funzoProxy.domain.subject.Subject
 import com.funzo.funzoProxy.domain.subject.SubjectServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.CreateSubjectDto
+import lombok.NoArgsConstructor
 import org.springframework.stereotype.Component
 
 @Component
-class CreateSubjectCommandHandler(private val subjectServiceImpl: SubjectServiceImpl) {
+@NoArgsConstructor
+class CreateSubjectCommandHandler(private val subjectServiceImpl: SubjectServiceImpl)
+    : CommandHandler<CreateSubjectDto, CreateSubjectCommand> {
 
-    fun handle(createSubjectCommand: CreateSubjectCommand): Subject {
-        validateCommand(createSubjectCommand)
-        return subjectServiceImpl.createSubject(createSubjectCommand)
+    override fun handle(command: CreateSubjectCommand): CreateSubjectDto {
+        validateCommand(command)
+        return mapToDto(subjectServiceImpl.createSubject(command))
+    }
+
+    private fun mapToDto(subject: Subject): CreateSubjectDto {
+        return CreateSubjectDto(
+            category = subject.category,
+            code = subject.code,
+            description = subject.description,
+            name = subject.name
+        )
     }
 
     private fun validateCommand(createSubjectCommand: CreateSubjectCommand) {
