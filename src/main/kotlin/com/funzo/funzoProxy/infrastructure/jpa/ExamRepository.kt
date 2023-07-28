@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface ExamRepository: JpaRepository<Exam, Long> {
     fun findByCode(examCode: String): Exam?
     fun deleteByCode(examCode: String)
+
+    fun findBySubjectCode(subjectCode: String): List<Exam>
 }

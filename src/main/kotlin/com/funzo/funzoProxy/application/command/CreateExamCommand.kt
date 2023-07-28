@@ -4,5 +4,5 @@ import com.funzo.funzoProxy.application.controller.response.CreateExamCommandRes
 
 data class CreateExamCommand(
     val level: Int,
-    val questions: List<AddQuestionCommand>?
+    val subjectCode: String
 ): Command<CreateExamCommandResponse>

@@ -2,6 +2,7 @@ package com.funzo.funzoProxy.domain.exam
 
 import com.funzo.funzoProxy.application.command.CreateExamCommand
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
+import org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Assertions.*
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.openMocks
+import org.springframework.data.crossstore.ChangeSetPersister
 
 class ExamServiceImplTest {
     companion object {
@@ -34,7 +36,7 @@ class ExamServiceImplTest {
     inner class WhenSaving{
         @Test
         fun shouldSaveSuccessfully() {
-            examService.save(CreateExamCommand(1, null))
+            examService.save(CreateExamCommand(1, "S01"))
             verify(examRepository).save(any())
         }
     }
@@ -58,9 +60,8 @@ class ExamServiceImplTest {
 
             val examService = ExamServiceImpl(examRepository)
 
-            val result = examService.findByCode(examCode)
-
-            assertEquals(null, result)
+            assertThatExceptionOfType(ChangeSetPersister.NotFoundException::class.java)
+                .isThrownBy { examService.findByCode(examCode) }
         }
     }
 
@@ -70,7 +71,7 @@ class ExamServiceImplTest {
         fun shouldDeleteExamByCode() {
             val examService = ExamServiceImpl(examRepository)
 
-            examService.delete(examCode)
+            examService.deleteByCode(examCode)
 
             verify(examRepository).deleteByCode(examCode)
         }
