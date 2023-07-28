@@ -1,7 +1,8 @@
 package com.funzo.funzoProxy.application.command.handler
 
-import com.funzo.funzoProxy.application.command.bus.Command
+import com.funzo.funzoProxy.application.command.Command
 
-interface CommandHandler<T : Command> {
-    fun handle(command: T)
+
+interface CommandHandler<R, C : Command<R>> {
+    fun handle(command: C): R
 }

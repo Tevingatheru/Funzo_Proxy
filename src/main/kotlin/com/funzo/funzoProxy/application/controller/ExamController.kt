@@ -3,7 +3,7 @@ package com.funzo.funzoProxy.application.controller
 import com.funzo.funzoProxy.application.command.CreateExamCommand
 import com.funzo.funzoProxy.application.command.CreateQuestionCommand
 import com.funzo.funzoProxy.application.controller.request.CreateExamRequest
-import com.funzo.funzoProxy.application.command.handler.CommandBus
+import com.funzo.funzoProxy.application.command.bus.CommandBusImpl
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/exams")
-class ExamController(private val commandBus: CommandBus)  {
+class ExamController(private val commandBusImpl: CommandBusImpl)  {
     @PostMapping
     fun createExam(@RequestBody request: CreateExamRequest): ResponseEntity<String> {
         val command = CreateExamCommand(
@@ -22,7 +22,7 @@ class ExamController(private val commandBus: CommandBus)  {
             }
         )
 
-        commandBus.dispatch(command)
+        commandBusImpl.dispatch(command)
         return ResponseEntity.ok("Exam created successfully")
     }
 }
