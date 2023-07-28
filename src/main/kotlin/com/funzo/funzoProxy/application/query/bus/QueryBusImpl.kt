@@ -11,7 +11,7 @@ class QueryBusImpl (
 ): QueryBus {
 
     override fun <R, Q : Query<R>> execute(query: Q): R {
-        val queryHandler: QueryHandler<R, Q> =  queryHandlerRegistry.get(query.javaClass)
+        val queryHandler =  queryHandlerRegistry.get(query::class.java) as QueryHandler<R, Q>
         return queryHandler.handle(query)!!
     }
 }

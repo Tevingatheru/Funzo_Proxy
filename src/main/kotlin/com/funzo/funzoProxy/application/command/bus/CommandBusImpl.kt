@@ -6,10 +6,10 @@ import com.funzo.funzoProxy.infrastructure.registry.CommandHandlerRegistry
 import org.springframework.stereotype.Component
 
 @Component
-class CommandBusImpl(private val registry: CommandHandlerRegistry) : CommandBus {
+class CommandBusImpl(private val commandHandlerRegistry: CommandHandlerRegistry) : CommandBus {
 
     override fun <R, C : Command<R>> dispatch(command: C): R {
-        val commandHandler: CommandHandler<R, C> = registry[command::class.java] as CommandHandler<R, C>
+        val commandHandler: CommandHandler<R, C> = commandHandlerRegistry.get(command::class.java) as CommandHandler<R, C>
         return commandHandler.handle(command)
     }
 }

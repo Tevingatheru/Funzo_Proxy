@@ -1,7 +1,7 @@
 <configuration>
     <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36}%n MDC =%mdc{user} %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} (%line )%n MDC =%mdc{user} %msg%n</pattern>
         </encoder>
     </appender>
 

@@ -14,13 +14,13 @@ class LoggerUtils {
             return stringBuilder.toString()
         }
 
-        fun log(level: LogLevel, message: String, map: Map<String, Any>? = null, className: Class<*>) {
+        fun log(level: LogLevel, message: String, diagnosisMap: Map<String, Any>? = null, className: Class<*>) {
             val logger = LoggerFactory.getLogger(className)
             when (level) {
-                LogLevel.DEBUG -> logger.debug(buildLogMessage(message, map))
-                LogLevel.INFO -> logger.info(buildLogMessage(message, map))
-                LogLevel.WARN -> logger.warn(buildLogMessage(message, map))
-                LogLevel.ERROR -> logger.error(buildLogMessage(message, map))
+                LogLevel.DEBUG -> logger.debug(buildLogMessage(message, diagnosisMap))
+                LogLevel.INFO -> logger.info(buildLogMessage(message, diagnosisMap))
+                LogLevel.WARN -> logger.warn(buildLogMessage(message, diagnosisMap))
+                LogLevel.ERROR -> logger.error(buildLogMessage(message, diagnosisMap))
             }
         }
 
