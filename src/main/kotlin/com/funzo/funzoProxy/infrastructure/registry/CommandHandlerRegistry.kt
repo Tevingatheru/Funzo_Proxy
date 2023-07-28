@@ -26,7 +26,7 @@ class CommandHandlerRegistry @Autowired constructor(
     init {
         val names: Array<String> = applicationContext.getBeanNamesForType(CommandHandler::class.java)
         for (name in names) {
-            val commandHandlerClass = applicationContext.getType(name) as Class<CommandHandler<*, Command<*>>>
+            val commandHandlerClass = applicationContext.getType(name) as Class<CommandHandler<*, *>>
             register(applicationContext, commandHandlerClass)
         }
     }
@@ -34,12 +34,12 @@ class CommandHandlerRegistry @Autowired constructor(
     /**
      * Registers a Command Handler in the registry.
      * @param applicationContext The Spring ApplicationContext.
-     * @param handler The Command Handler to be registered.
+     * @param commandHandlerClass The Command Handler to be registered.
      */
-    private fun register(applicationContext: ApplicationContext, handler:Class<CommandHandler<*, Command<*>>>) {
-        val generics = GenericTypeResolver.resolveTypeArguments(handler, CommandHandler::class.java)!!
+    private fun register(applicationContext: ApplicationContext, commandHandlerClass:Class<CommandHandler<*, *>>) {
+        val generics = GenericTypeResolver.resolveTypeArguments(commandHandlerClass, CommandHandler::class.java)
         val commandType = generics?.get(1) as? Class<out Command<*>?>
-        commandType?.let { providerMap[it] = CommandHandlerProvider(applicationContext, handler::class.java as Class<CommandHandler<*, Command<*>>>) }
+        commandType?.let { providerMap[it] = CommandHandlerProvider(applicationContext, commandHandlerClass::class.java as Class<CommandHandler<*, *>>) }
     }
 
     /**
