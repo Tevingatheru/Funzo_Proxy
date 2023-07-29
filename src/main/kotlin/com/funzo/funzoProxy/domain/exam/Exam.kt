@@ -1,5 +1,6 @@
 package com.funzo.funzoProxy.domain.exam
 
+import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.domain.subject.Subject
 import jakarta.persistence.*
 
@@ -9,7 +10,7 @@ import jakarta.persistence.*
 data class Exam(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    val id: Long?,
 
     @ManyToOne
     @JoinColumn(name = "subject_code", referencedColumnName = "code")

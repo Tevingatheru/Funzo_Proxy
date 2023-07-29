@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.core.GenericTypeResolver
 import org.springframework.stereotype.Component
 import java.lang.RuntimeException
+import kotlin.reflect.KClass
 
 
 /**
@@ -24,19 +25,22 @@ class CommandHandlerRegistry @Autowired constructor(
      * @param applicationContext The Spring ApplicationContext used for discovering Command Handlers.
      */
     init {
-        applicationContext.getBeansOfType(CommandHandler::class.java)
-            .forEach { (_, handler) -> register(applicationContext, handler) }
+        val names: Array<String> = applicationContext.getBeanNamesForType(CommandHandler::class.java)
+        for (name in names) {
+            val commandHandlerClass = applicationContext.getType(name) as Class<CommandHandler<*, *>>
+            register(applicationContext, commandHandlerClass)
+        }
     }
 
     /**
      * Registers a Command Handler in the registry.
      * @param applicationContext The Spring ApplicationContext.
-     * @param handler The Command Handler to be registered.
+     * @param commandHandlerClass The Command Handler to be registered.
      */
-    private fun register(applicationContext: ApplicationContext, handler: CommandHandler<*, *>) {
-        val generics = GenericTypeResolver.resolveTypeArguments(handler::class.java, CommandHandler::class.java)
-        val commandType = generics?.get(1) as? Class<out Command<*>?>
-        commandType?.let { providerMap[it] = CommandHandlerProvider(applicationContext, handler::class.java as Class<CommandHandler<*, *>>) }
+    private fun register(applicationContext: ApplicationContext, commandHandlerClass:Class<CommandHandler<*, *>>) {
+        val generics = GenericTypeResolver.resolveTypeArguments(commandHandlerClass, CommandHandler::class.java)
+        val commandType = generics?.get(1) as Class<out Command<*>>
+        commandType.let { providerMap[it] = CommandHandlerProvider(applicationContext, commandHandlerClass) }
     }
 
     /**
@@ -49,5 +53,3 @@ class CommandHandlerRegistry @Autowired constructor(
         return providerMap[commandClass]?.get() ?: throw RuntimeException("Handler not found for command: ${commandClass.simpleName}")
     }
 }
-
-

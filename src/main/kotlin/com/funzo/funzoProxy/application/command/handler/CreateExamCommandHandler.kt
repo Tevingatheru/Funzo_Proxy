@@ -5,11 +5,14 @@ import com.funzo.funzoProxy.application.controller.response.CreateExamCommandRes
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.domain.exam.ExamService
 import jakarta.transaction.Transactional
+import lombok.NoArgsConstructor
 import org.springframework.stereotype.Service
 
 @Service
 @Transactional
-class CreateExamCommandHandler(private val examService: ExamService): CommandHandler<CreateExamCommandResponse, CreateExamCommand> {
+@NoArgsConstructor
+class CreateExamCommandHandler(private val examService: ExamService)
+    : CommandHandler<CreateExamCommandResponse, CreateExamCommand> {
 
     override fun handle(command: CreateExamCommand): CreateExamCommandResponse {
 

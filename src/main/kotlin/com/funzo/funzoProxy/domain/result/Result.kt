@@ -10,14 +10,14 @@ import jakarta.persistence.*
 data class Result(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int,
+    val id: Long,
 
     @ManyToOne
-    @JoinColumn(name = "exam_code")
+    @JoinColumn(name = "exam_code", referencedColumnName = "code")
     val exam: Exam,
 
     @ManyToOne
-    @JoinColumn(name = "student_code")
+    @JoinColumn(name = "student_code", referencedColumnName = "code")
     val student: User,
 
     @Column(unique = true)

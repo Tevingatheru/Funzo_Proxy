@@ -1,4 +1,4 @@
-package com.funzo.funzoProxy.domain.exam
+package com.funzo.funzoProxy.domain.question
 
 import jakarta.persistence.*
 
@@ -8,10 +8,14 @@ import jakarta.persistence.*
 abstract class QuestionType {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    open val id: Int? = 0
+    open val id: Long? = 0
 
     @Column(name = "code")
     open val code: String? = null
+
+    @ManyToOne
+    @JoinColumn(name = "question_code", referencedColumnName = "code")
+    val question: Question? = null
 
     companion object {
         /**
