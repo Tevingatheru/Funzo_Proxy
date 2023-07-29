@@ -2,8 +2,8 @@ package com.funzo.funzoProxy.domain.subject
 
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
-import com.funzo.funzoProxy.infrastructure.LogLevel
-import com.funzo.funzoProxy.infrastructure.LoggerUtils
+import com.funzo.funzoProxy.infrastructure.util.LogLevel
+import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
