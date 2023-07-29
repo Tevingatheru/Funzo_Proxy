@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy.application.controller.request
 
-class UpdateSubjectRequest(
+data class UpdateSubjectRequest(
     val description: String,
     val category: String,
     val name: String,

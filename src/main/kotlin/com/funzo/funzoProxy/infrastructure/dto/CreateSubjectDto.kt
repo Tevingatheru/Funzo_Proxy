@@ -1,5 +1,9 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-class CreateSubjectDto(category: String, code: String, description: String, name: String) {
+data class CreateSubjectDto(
+    val category: String,
+    val code: String,
+    val description: String,
+    val name: String) {
 
 }

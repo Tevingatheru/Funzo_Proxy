@@ -2,6 +2,7 @@ package com.funzo.funzoProxy.application.controller
 
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
 import com.funzo.funzoProxy.application.command.DeleteSubjectCommand
+import com.funzo.funzoProxy.application.query.GetAllSubjectsQuery
 import com.funzo.funzoProxy.application.command.UpdateSubjectCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateSubjectRequest
@@ -10,6 +11,7 @@ import com.funzo.funzoProxy.application.query.GetSubjectByCodeQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.CreateSubjectDto
 import com.funzo.funzoProxy.infrastructure.dto.SubjectDto
+import com.funzo.funzoProxy.infrastructure.dto.SubjectListDto
 import com.funzo.funzoProxy.infrastructure.dto.UpdateSubjectDto
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -63,7 +65,7 @@ class SubjectController(
         }
     }
 
-    @GetMapping(produces = [])
+    @GetMapping("/code")
     fun getSubjectByCode(@RequestParam("code") code: String)
     :  SubjectDto
     {
@@ -73,6 +75,19 @@ class SubjectController(
             )
 
              queryBus.execute(getSubjectByCodeQuery)
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping()
+    fun getAllSubjects()
+            : SubjectListDto
+    {
+        return try {
+            val query: GetAllSubjectsQuery = GetAllSubjectsQuery()
+
+            queryBus.execute(query)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

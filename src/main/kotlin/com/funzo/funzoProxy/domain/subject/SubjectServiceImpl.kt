@@ -68,4 +68,12 @@ class SubjectServiceImpl(
             throw RuntimeException(e)
         }
     }
+
+    override fun findAllSubjects(): List<Subject> {
+        try {
+            return subjectRepository.findAll()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
 }

@@ -7,4 +7,5 @@ interface SubjectService {
     fun updateSubjectDetails(code: String, category: String, description: String, name: String): Subject
     fun deleteSubjectByCode(code: String)
     fun findByCode(code: String): Subject
+    fun findAllSubjects(): List<Subject>
 }
