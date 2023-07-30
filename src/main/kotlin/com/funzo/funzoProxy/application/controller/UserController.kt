@@ -1,10 +1,13 @@
 package com.funzo.funzoProxy.application.controller
 
 import com.funzo.funzoProxy.application.command.AddUserDetailsCommand
-import com.funzo.funzoProxy.application.command.handler.CommandBus
+import com.funzo.funzoProxy.application.command.DeleteUserByCodeCommand
+import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateUserRequest
-import com.funzo.funzoProxy.domain.user.User
-import com.funzo.funzoProxy.infrastructure.jpa.UserServiceImpl
+import com.funzo.funzoProxy.application.query.GetUserByCodeQuery
+import com.funzo.funzoProxy.application.query.bus.QueryBus
+import com.funzo.funzoProxy.infrastructure.dto.AddUserDetailsDto
+import com.funzo.funzoProxy.infrastructure.dto.GetUserByCodeDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,34 +21,37 @@ import java.lang.RuntimeException
 @RequestMapping("/users")
 internal class UserController(
     private val commandBus: CommandBus,
-    private val userServiceImpl: UserServiceImpl) {
+    private val queryBus: QueryBus
+) {
     @PostMapping
-    fun createUser(createUserRequest: CreateUserRequest) : ResponseEntity<Any> {
-        try {
+    fun createUser(createUserRequest: CreateUserRequest) : AddUserDetailsDto
+    {
+        return try {
             val command = AddUserDetailsCommand(
                 createUserRequest.userType,
                 createUserRequest.email
             )
-            val user: Any = commandBus.dispatch(command)
-            return ResponseEntity.ok(user)
+            commandBus.dispatch(command)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
     @GetMapping
-    fun findByCode(@RequestParam code: String) : ResponseEntity<User> {
+    fun findByCode(@RequestParam code: String) : GetUserByCodeDto
+    {
         try {
-            return ResponseEntity.ok(userServiceImpl.findByCode(code))
+            return queryBus.execute(query = GetUserByCodeQuery(code = code))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
     @DeleteMapping
-    fun deleteByCode(@RequestParam code: String) : ResponseEntity<String> {
+    fun deleteByCode(@RequestParam code: String) : String
+    {
         try{
-            return ResponseEntity.ok(userServiceImpl.deleteByCode(code))
+            return commandBus.dispatch(DeleteUserByCodeCommand(code = code))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
