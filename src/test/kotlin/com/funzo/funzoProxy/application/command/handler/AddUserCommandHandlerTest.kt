@@ -4,7 +4,6 @@ import com.funzo.funzoProxy.application.command.AddUserDetailsCommand
 import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.domain.user.UserService
 import com.funzo.funzoProxy.domain.user.UserType
-import com.funzo.funzoProxy.infrastructure.GenerateCodeService
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

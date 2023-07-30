@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-data class GetUserByCodeDto (
+data class GetUserDto (
     val code: String,
     val email: String,
-    val type: String)
+    val userType: String)
