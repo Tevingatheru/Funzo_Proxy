@@ -4,12 +4,16 @@ import com.funzo.funzoProxy.application.command.CreateExamCommand
 import com.funzo.funzoProxy.application.command.DeleteExamCommand
 import com.funzo.funzoProxy.application.controller.request.CreateExamRequest
 import com.funzo.funzoProxy.application.command.bus.CommandBusImpl
-import com.funzo.funzoProxy.application.controller.request.SubjectExamListRequest
-import com.funzo.funzoProxy.domain.exam.ExamListResponse
+import com.funzo.funzoProxy.application.controller.response.CreateExamCommandResponse
+import com.funzo.funzoProxy.infrastructure.dto.ExamListDto
 import com.funzo.funzoProxy.application.query.GetExamByCodeQuery
 import com.funzo.funzoProxy.application.query.GetExamListBySubjectCodeQuery
+import com.funzo.funzoProxy.application.query.GetExamListQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBusImpl
-import com.funzo.funzoProxy.domain.exam.ExamResponse
+import com.funzo.funzoProxy.infrastructure.dto.ExamDto
+import com.funzo.funzoProxy.infrastructure.util.LogLevel
+import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,17 +31,16 @@ class ExamController(
     private val queryBusImpl: QueryBusImpl
 )  {
     @PostMapping
-    fun createExam(@RequestBody request: CreateExamRequest): ResponseEntity<String> {
-        try {
+    fun createExam( @RequestBody request: CreateExamRequest): CreateExamCommandResponse {
+        return try {
             val command = CreateExamCommand(
                 request.level,
                 request.subjectCode
             )
 
             commandBusImpl.dispatch(command)
-            return ResponseEntity.ok("Exam created successfully")
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            throw RuntimeException(e.localizedMessage)
         }
     }
 
@@ -51,32 +54,45 @@ class ExamController(
             commandBusImpl.dispatch(command)
             return ResponseEntity.ok("Exam deleted successfully")
         } catch (e: Exception) {
-            throw RuntimeException()
+            throw RuntimeException(e.localizedMessage)
         }
     }
 
-    @GetMapping
-    fun getExamByCode(@RequestParam("code") code: String): ResponseEntity<ExamResponse> {
-        try {
+    @GetMapping("/code")
+    fun getExamByCode(@RequestParam("code") code: String): ExamDto {
+        return try {
             val query = GetExamByCodeQuery(code = code)
-            val examResponse: ExamResponse = queryBusImpl
-                .execute(query)
-            return ResponseEntity.ok(examResponse)
+
+            queryBusImpl.execute(query)
+        } catch (e: NotFoundException) {
+            throw NotFoundException()
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            throw RuntimeException(e.localizedMessage)
         }
     }
 
-    @GetMapping
-    fun getSubjectExamList(@RequestBody subjectExamListRequest: SubjectExamListRequest): ResponseEntity<ExamListResponse> {
-        try {
+    @GetMapping("subject")
+    fun getSubjectExamList(@RequestParam subjectCode: String): ExamListDto {
+        return try {
             val query = GetExamListBySubjectCodeQuery(
-                subjectCode = subjectExamListRequest.subjectCode
+                subjectCode = subjectCode
             )
-            val examListResponse: ExamListResponse = queryBusImpl.execute(query)
-            return ResponseEntity.ok(examListResponse)
+
+            queryBusImpl.execute(query)
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            throw RuntimeException(e.localizedMessage)
+        }
+    }
+
+    @GetMapping()
+    fun getAllSubjects(): ExamListDto {
+        return try {
+            val query = GetExamListQuery()
+
+            queryBusImpl.execute(query)
+        } catch (e: Exception) {
+            LoggerUtils.log(LogLevel.ERROR, e.localizedMessage, this::class.java)
+            throw RuntimeException(e.localizedMessage)
         }
     }
 }

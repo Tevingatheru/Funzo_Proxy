@@ -4,4 +4,3 @@ data class CreateExamRequest(
     val level: Int,
     val subjectCode: String
 )
-

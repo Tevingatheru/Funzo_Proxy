@@ -1,7 +1,9 @@
 package com.funzo.funzoProxy.domain.exam
 
-import com.funzo.funzoProxy.application.command.CreateExamCommand
+import com.funzo.funzoProxy.domain.subject.Subject
+import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
+import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
 import org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType
 
 import org.junit.jupiter.api.BeforeEach
@@ -15,7 +17,13 @@ import org.mockito.MockitoAnnotations.openMocks
 import org.springframework.data.crossstore.ChangeSetPersister
 
 class ExamServiceImplTest {
+
     companion object {
+        @Mock
+        private lateinit var subjectRepository: SubjectRepository
+        @Mock
+        private lateinit var generateCodeServiceImpl: GenerateCodeServiceImpl
+
         @Mock
         @JvmStatic
         private lateinit var examRepository: ExamRepository
@@ -29,14 +37,14 @@ class ExamServiceImplTest {
     @BeforeEach
     fun setUp() {
         openMocks(this)
-        examService = ExamServiceImpl(examRepository)
+        examService = ExamServiceImpl(examRepository, generateCodeServiceImpl = generateCodeServiceImpl, subjectRepository =  subjectRepository)
     }
 
     @Nested
     inner class WhenSaving{
         @Test
         fun shouldSaveSuccessfully() {
-            examService.save(CreateExamCommand(1, "S01"))
+            examService.save(1, "S01")
             verify(examRepository).save(any())
         }
     }
@@ -46,7 +54,7 @@ class ExamServiceImplTest {
 
         @Test
         fun shouldFindByCode() {
-            val expectedExam = Exam(1)
+            val expectedExam = Exam(level = 1,  subject = Subject() , code = "C01")
             `when`(examRepository.findByCode(examCode)).thenReturn(expectedExam)
 
             val result = examService.findByCode(examCode)
@@ -58,7 +66,7 @@ class ExamServiceImplTest {
         fun shouldNotFindExamByCode() {
             `when`(examRepository.findByCode(examCode)).thenReturn(null)
 
-            val examService = ExamServiceImpl(examRepository)
+            val examService = ExamServiceImpl(examRepository, generateCodeServiceImpl, subjectRepository)
 
             assertThatExceptionOfType(ChangeSetPersister.NotFoundException::class.java)
                 .isThrownBy { examService.findByCode(examCode) }
@@ -69,7 +77,7 @@ class ExamServiceImplTest {
     inner class WhenDeleting {
         @Test
         fun shouldDeleteExamByCode() {
-            val examService = ExamServiceImpl(examRepository)
+            val examService = ExamServiceImpl(examRepository, generateCodeServiceImpl, subjectRepository)
 
             examService.deleteByCode(examCode)
 
