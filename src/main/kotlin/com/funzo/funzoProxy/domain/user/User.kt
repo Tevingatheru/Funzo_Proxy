@@ -8,7 +8,7 @@ import jakarta.persistence.*
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    val id: Long?,
 
     @Column(unique = true, name = "code")
     val code: String,

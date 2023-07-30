@@ -1,7 +1,15 @@
 package com.funzo.funzoProxy.application.command.handler
 
-import com.funzo.funzoProxy.application.command.bus.Command
+import com.funzo.funzoProxy.application.command.Command
 
-interface CommandHandler<T : Command> {
-    fun handle(command: T)
+/**
+ * Interface representing a CommandHandler. Defines the handle method for handling commands.
+ */
+interface CommandHandler<R, C : Command<R>> {
+    /**
+     * Handles the given command.
+     * @param command The command to be handled.
+     * @return The result of handling the command.
+     */
+    fun handle(command: C): R
 }

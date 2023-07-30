@@ -1,4 +1,4 @@
-package com.funzo.funzoProxy.domain.exam
+package com.funzo.funzoProxy.domain.question
 
 import jakarta.persistence.*
 
@@ -6,15 +6,12 @@ import jakarta.persistence.*
 @Table(name = "true_or_false_answers")
 data class TrueOrFalseQuestion(
     @Id
-    override val id: Int? = 0,
+    override val id: Long? = 0,
 
-    @ManyToOne
-    @JoinColumn(name = "question_code")
-    val question: Question?,
 
     @Column(name = "correct_option")
     val correctOption: Boolean?
 ): QuestionType(){
-    constructor() : this(null, null, null)
+    constructor() : this(null, null)
 
 }
