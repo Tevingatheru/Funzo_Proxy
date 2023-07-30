@@ -7,8 +7,6 @@ import lombok.Setter
 
 @Entity
 @Table(name = "users")
-@Setter
-@Getter
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

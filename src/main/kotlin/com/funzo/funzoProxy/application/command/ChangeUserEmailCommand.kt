@@ -5,6 +5,4 @@ import com.funzo.funzoProxy.infrastructure.dto.GetUserDto
 class ChangeUserEmailCommand(
     val userCode: String,
     val email: String
-) : Command<GetUserDto> {
-
-}
+) : Command<GetUserDto>

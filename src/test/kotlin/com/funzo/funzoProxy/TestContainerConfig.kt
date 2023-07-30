@@ -1,13 +1,8 @@
 package com.funzo.funzoProxy
 
-import com.funzo.funzoProxy.infrastructure.GenerateCodeService
-import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Configuration
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -16,16 +11,10 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 
 @Testcontainers
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = [GenerateCodeService::class])
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
 @ExtendWith(SpringExtension::class)
-@ActiveProfiles("itest")
 class TestContainerConfig {
-
-    @MockBean
-    private lateinit var generateCodeService: GenerateCodeService
 
     companion object {
         @Container
@@ -41,6 +30,7 @@ class TestContainerConfig {
             registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl)
             registry.add("spring.datasource.password", mysqlContainer::getPassword)
             registry.add("spring.datasource.username", mysqlContainer::getUsername)
+
         }
     }
 }

@@ -1,8 +1,5 @@
 package com.funzo.funzoProxy.domain.user
 
-import lombok.Getter
-
-@Getter
 enum class UserType(val type: String? = null) {
     ADMINISTRATOR("administrator"),
     STUDENT("student"),

@@ -5,7 +5,7 @@ import org.springframework.test.context.ContextConfiguration
 
 @ContextConfiguration(
 	classes = [TestContainerConfig::class])
-open class FunzoProxyApplicationTests
+class FunzoProxyApplicationTests
 {
 	@Test
 	fun contextLoads() {
