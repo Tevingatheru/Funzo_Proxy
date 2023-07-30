@@ -27,6 +27,5 @@ data class Exam(
 ) {
     constructor(level: Int, code: String, subject: Subject)
             : this(null, subject, code, level,null)
-//    constructor(level: Int) : this(null, null, null, level, null)
 
 }

@@ -31,6 +31,8 @@ class ExamServiceImpl(
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
                 subject = subjectRepository.findByCode(subjectCode) ?: throw NotFoundException())
             return examRepository.saveAndFlush(exam)
+        } catch (e: NotFoundException) {
+            throw NotFoundException()
         } catch (e: InvalidDataAccessApiUsageException) {
             LoggerUtils.log(LogLevel.ERROR, e.localizedMessage!!, mapOf(Pair("subjectCode", subjectCode)), this::class.java)
             throw RuntimeException("Transient reference Subject not found. Code: $subjectCode")

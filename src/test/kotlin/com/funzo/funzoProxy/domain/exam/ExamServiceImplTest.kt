@@ -21,11 +21,11 @@ class ExamServiceImplTest {
     companion object {
         @Mock
         private lateinit var subjectRepository: SubjectRepository
+
         @Mock
         private lateinit var generateCodeServiceImpl: GenerateCodeServiceImpl
 
         @Mock
-        @JvmStatic
         private lateinit var examRepository: ExamRepository
 
         @InjectMocks
@@ -38,14 +38,25 @@ class ExamServiceImplTest {
     fun setUp() {
         openMocks(this)
         examService = ExamServiceImpl(examRepository, generateCodeServiceImpl = generateCodeServiceImpl, subjectRepository =  subjectRepository)
+        `when`(generateCodeServiceImpl.generateCodeWithLength(anyInt())).thenReturn(examCode)
+        `when`(examRepository.saveAndFlush(any())).thenReturn(Exam())
     }
 
     @Nested
-    inner class WhenSaving{
+    inner class WhenSaving {
+        @Test
+        fun shouldFailedIfSubjectIsNotFound() {
+            assertThatExceptionOfType(ChangeSetPersister.NotFoundException::class.java)
+                .isThrownBy { examService.save(1, "S01") }
+
+            verify(examRepository, times(0)).saveAndFlush(any())
+        }
+
         @Test
         fun shouldSaveSuccessfully() {
+            `when`(subjectRepository.findByCode(anyString())).thenReturn(Subject())
             examService.save(1, "S01")
-            verify(examRepository).save(any())
+            verify(examRepository).saveAndFlush(any())
         }
     }
 
