@@ -10,7 +10,7 @@ import jakarta.persistence.*
 data class Result(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long?,
 
     @ManyToOne
     @JoinColumn(name = "exam_code", referencedColumnName = "code")
@@ -25,5 +25,15 @@ data class Result(
 
     val score: String,
 
-    val attempts: Int
-)
+    var attemptNo: Int = 0
+){
+    constructor(exam: Exam, student: User, code: String, score: String) : this(id = null,
+        exam = exam,
+        student = student,
+        code = code,
+        score = score,
+        ) {
+        attemptNo++
+    }
+
+}
