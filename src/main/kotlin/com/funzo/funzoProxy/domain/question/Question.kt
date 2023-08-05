@@ -30,10 +30,10 @@ data class Question(
     constructor(
         exam: Exam,
         question: String,
-        type: QuestionType,
-        image: String
+        type: QuestionType?,
+        image: String?
     ) : this(0, exam, null, question, type, image)
 
-    constructor(): this(null, Exam(), null, null, null, null)
+//    constructor(): this(id = null, exam = Exam(), code = null, question = null, type = null, image = null)
 
 }

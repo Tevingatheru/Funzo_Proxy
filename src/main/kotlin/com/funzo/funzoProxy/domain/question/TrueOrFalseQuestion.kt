@@ -6,15 +6,18 @@ import jakarta.persistence.*
 @Table(name = "true_or_false_answers")
 data class TrueOrFalseQuestion(
     @Id
-    override val id: Int? = 0,
+    override val id: Long? = 0,
 
     @ManyToOne
     @JoinColumn(name = "question_code")
-    val question: Question?,
+    val question: Question? = null,
 
     @Column(name = "correct_option")
-    val correctOption: Boolean?
+    val correctOption: Boolean? = null
 ): QuestionType(){
-    constructor() : this(null, null, null)
-
+    //    constructor() : this(id = null, question = null, correctOption = null)
+    constructor(question: Question, correctOption: Boolean, code: String) : this(
+        correctOption = correctOption,
+        question = question,
+        )
 }

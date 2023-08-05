@@ -9,13 +9,14 @@ private const val MULTIPLE_CHOICE = "multiple_choice"
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-abstract class QuestionType {
+abstract class QuestionType(
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    open val id: Int? = 0
-
+    open val id: Long? = 0,
     @Column(name = "code")
     open val code: String? = null
+) {
+    constructor(code: String): this(code = code, id = null)
 
     companion object {
         /**
@@ -31,37 +32,48 @@ abstract class QuestionType {
 
         fun generateQuestionType(
             questionType: QuestionType,
-            savedQuestion: Question
-        ): Question {
-            return when (questionType) {
-                is MultipleChoiceQuestion -> {
-                    val multipleChoiceQuestion = MultipleChoiceQuestion(
-                        null,
-                        savedQuestion,
-                        questionType.optionA,
-                        questionType.optionB,
-                        questionType.optionC,
-                        questionType.optionD,
-                        questionType.correctOption
-                    )
-                    savedQuestion.type = multipleChoiceQuestion
-                    return savedQuestion
-                }
-
-                is TrueOrFalseQuestion -> {
-                    val trueOrFalseQuestion = TrueOrFalseQuestion(
-                        null,
-                        savedQuestion,
-                        questionType.correctOption
-                    )
-                    savedQuestion.type = trueOrFalseQuestion
-                    return savedQuestion
-                }
-
-                else -> {
-                    throw IllegalArgumentException("Invalid question type")
-                }
+            correctOption: String,
+            question: Question,
+            optionA: String?,
+            optionB: String?,
+            optionC: String?,
+            optionD: String?,
+            code: String,
+        ): QuestionType {
+            if (questionType is MultipleChoiceQuestion) {
+                return createMCQ(code, optionA, optionB, optionC, optionD, question, correctOption)
+            } else if (questionType is TrueOrFalseQuestion) {
+                return createTFQ(question, correctOption, code)
+            } else {
+                throw IllegalArgumentException("Invalid question type")
             }
+        }
+
+        private fun createTFQ(questionText: Question, correctOption: String, code: String): TrueOrFalseQuestion {
+            return TrueOrFalseQuestion(
+                question = questionText,
+                correctOption = correctOption.toBoolean(),
+                code = code,
+            )
+        }
+
+        private fun createMCQ(
+            optionA: String?,
+            optionB: String?,
+            optionC: String?,
+            optionD: String?,
+            question: Question,
+            correctOption: String
+        ) : MultipleChoiceQuestion {
+            return MultipleChoiceQuestion(
+                id = null,
+                optionA = optionA,
+                optionB = optionB,
+                optionC = optionC,
+                optionD = optionD,
+                question = question,
+                correctOption = correctOption,
+            )
         }
     }
 }

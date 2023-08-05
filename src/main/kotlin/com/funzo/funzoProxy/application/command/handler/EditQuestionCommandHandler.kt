@@ -12,6 +12,6 @@ class EditQuestionCommandHandler(private val questionService: QuestionService)
 {
 
     override fun handle(command: EditQuestionCommand): EditQuestionResponse {
-        return questionService.modifyQuestion(command.examCode, command.questionCode, command.question, QuestionType.generate(command.questionType), command.image)
+        return questionService.modifyQuestion(command.examCode, command.questionCode, command.question, QuestionType.find(command.questionType), command.image)
     }
 }

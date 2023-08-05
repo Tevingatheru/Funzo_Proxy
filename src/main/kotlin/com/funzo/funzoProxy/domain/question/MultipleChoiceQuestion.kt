@@ -6,27 +6,27 @@ import jakarta.persistence.*
 @Table(name = "multiple_choice_answers")
 data class MultipleChoiceQuestion(
     @Id
-    override val id: Int?,
+    override val id: Long? = 0,
 
     @ManyToOne
     @JoinColumn(name = "question_code")
-    val question: Question?,
+    val question: Question? = null,
 
     @Column(name = "option_a")
-    val optionA: String?,
+    val optionA: String? = null,
 
     @Column(name = "option_b")
-    val optionB: String?,
+    val optionB: String? = null,
 
     @Column(name = "option_c")
-    val optionC: String?,
+    val optionC: String? = null,
 
     @Column(name = "option_d")
-    val optionD: String?,
+    val optionD: String? = null,
 
     @Column(name = "correct_option")
-    val correctOption: String?
+    val correctOption: String? = null
 ) : QuestionType() {
-    constructor() :
-            this(null, null, null, null, null, null, null)
+//    constructor() :
+//            this(null, null, null, null, null, null, null)
 }

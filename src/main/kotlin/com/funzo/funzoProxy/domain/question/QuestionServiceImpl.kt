@@ -1,39 +1,61 @@
 package com.funzo.funzoProxy.domain.question
 
 import com.funzo.funzoProxy.domain.exam.Exam
+import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.QuestionRepository
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Service
+@Transactional
 class QuestionServiceImpl(
     private val questionRepository: QuestionRepository,
-    private val examRepository: ExamRepository
+    private val examRepository: ExamRepository,
+    private val generateCodeServiceImpl: GenerateCodeServiceImpl
 ) : QuestionService {
 
     override fun addQuestion(
         examCode: String,
-        question: String,
+        questionText: String,
         questionType: QuestionType,
-        image: String
+        image: String?,
+        correctOption: String,
+        optionA: String?,
+        optionB: String?,
+        optionC: String?,
+        optionD: String?
     ): AddQuestionResponse {
         val exam: Exam = getExamByCode(examCode)
 
-        val addedQuestion = Question(exam, question, questionType, image)
+        val questionTypeCode = generateCodeServiceImpl.generateCodeWithLength(7)
+        val questionTypeObject = QuestionType.generateQuestionType(
+            questionType,
+            correctOption = correctOption,
+            question = Question(exam = exam, question = questionText, type = null, image = null),
+            optionA = optionA,
+            optionB = optionB,
+            optionC = optionC,
+            optionD = optionD,
+            code = questionTypeCode
+        )
+        val questionCode = generateCodeServiceImpl.generateCodeWithLength(7)
+        val addedQuestion = Question(exam = exam,
+            question = questionText,
+            type =  questionType,
+            image = image,
+            code = questionCode,
+            id = null)
 
-        var savedQuestion = questionRepository.save(addedQuestion)
+        questionRepository.saveAndFlush(addedQuestion)
 
-        savedQuestion = QuestionType.generateQuestionType(questionType, savedQuestion)
-
-        questionRepository.save(savedQuestion)
-
-        return mapToAddQuestionsResponse(savedQuestion)
+        return mapToAddQuestionsResponse(addedQuestion)
     }
 
     override fun removeQuestion(examCode: String, questionCode: String) {
-        val exam = getExamByCode(examCode)
-        if (exam != null) {
-            questionRepository.delete(getQuestionByCode(questionCode))
-        }
+        getExamByCode(examCode)
+        questionRepository.delete(getQuestionByCode(questionCode))
     }
 
     override fun getQuestionsByExamCode(examCode: String): ExamQuestionsResponse {
@@ -50,19 +72,25 @@ class QuestionServiceImpl(
     ): EditQuestionResponse {
         getExamByCode(examCode = examCode)
 
-        var question: Question = getQuestionByCode(questionCode = questionCode)
+        var question: Question = getQuestionByCode(code = questionCode)
 
         if (questionText != null) {
             question.question = questionText
         }
-        if (questionType != null) {
-            question = QuestionType.generateQuestionType(questionType, question)
-        }
+
         if (questionImage != null) {
             question.image = questionImage
         }
 
         return mapToModifyQuestionResponse(question)
+    }
+
+    override fun getAllQuestions(): List<Question> {
+        return questionRepository.findAll()
+    }
+
+    override fun getQuestionByCode(code: String): Question {
+        return questionRepository.findByCode(code)
     }
 
     private fun mapToModifyQuestionResponse(question: Question): EditQuestionResponse {
@@ -76,9 +104,4 @@ class QuestionServiceImpl(
     private fun getExamByCode(examCode: String): Exam {
         return examRepository.findByCode(examCode) ?: throw NotFoundException()
     }
-
-    private fun getQuestionByCode(questionCode: String): Question {
-        return questionRepository.findByCode(questionCode)
-    }
-
 }
