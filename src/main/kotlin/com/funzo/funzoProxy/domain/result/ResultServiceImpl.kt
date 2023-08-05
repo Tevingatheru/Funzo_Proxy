@@ -27,24 +27,16 @@ class ResultServiceImpl(
         try {
             val exam: Exam = examRepository.findByCode(examCode = examCode) ?: throw NotFoundException()
             val studentUser: User = userRepository.findStudentByUserCode(userCode) ?: throw NotFoundException()
-            var result : Result
             val resultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
             val code = generateCodeServiceImpl.generateCodeWithLength(7)
-            if (resultList.isEmpty()) {
-                result = Result(
-                    exam = exam,
-                    student = studentUser,
-                    code = code,
-                    score = score
-                )
-            } else {
+            var result = Result(
+                exam = exam,
+                student = studentUser,
+                code = code,
+                score = score
+            )
+            if (resultList.isNotEmpty()) {
                 val lastResult = resultList.sortedBy { it.attemptNo }.get(0)
-                result = Result(
-                    exam = exam,
-                    student = studentUser,
-                    code = code,
-                    score = score
-                )
                 result.attemptNo = lastResult.attemptNo + 1
             }
             return resultRepository.saveAndFlush(result)
