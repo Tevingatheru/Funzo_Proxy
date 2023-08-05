@@ -14,8 +14,8 @@ interface ResultRepository: JpaRepository<Result, Long> {
 
     @Query(value = "SELECT * FROM results WHERE exam_code = :emailCode AND student_code = :userCode",
         nativeQuery = true)
-    fun findByEmailCodeAndUserCode(@Param(value = "emailCode") emailCode: String,
-                                   @Param(value = "userCode") userCode: String): List<Result>
+    fun findByExamCodeAndUserCode(@Param(value = "emailCode") emailCode: String,
+                                  @Param(value = "userCode") userCode: String): List<Result>
 
     @Query(value = "SELECT * FROM results WHERE student_code = :userCode",
         nativeQuery = true)

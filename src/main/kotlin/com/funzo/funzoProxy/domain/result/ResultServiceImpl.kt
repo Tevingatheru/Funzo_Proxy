@@ -7,6 +7,7 @@ import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,17 +19,28 @@ class ResultServiceImpl(
     @Autowired private val userRepository: UserRepository,
     private val generateCodeServiceImpl: GenerateCodeServiceImpl,
 ) : ResultService {
+    companion object{
+        const val UNABLE_TO_FIND_RESULTS = "Unable to find results"
+    }
+
     override fun createResult(examCode: String, userCode: String, score: String): Result {
         try {
-            val exam: Exam = examRepository.findByCode(examCode = examCode)!!
-            val studentUser: User = userRepository.findStudentByUserCode(userCode)
-            val result = Result(
-                exam = exam,
-                student = studentUser,
-                code = generateCodeServiceImpl.generateCodeWithLength(7),
-                score = score
-            )
-            return resultRepository.save(result)
+            val exam: Exam = examRepository.findByCode(examCode = examCode) ?: throw NotFoundException()
+            val studentUser: User = userRepository.findStudentByUserCode(userCode) ?: throw NotFoundException()
+            var result : Result
+            val resultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
+            if (resultList.isEmpty()) {
+                 result = Result(
+                    exam = exam,
+                    student = studentUser,
+                    code = generateCodeServiceImpl.generateCodeWithLength(7),
+                    score = score
+                )
+            } else {
+                result = resultList.sortedBy { it.attemptNo }.get(0)
+                result.attemptNo ++
+            }
+            return resultRepository.saveAndFlush(result)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
@@ -46,7 +58,7 @@ class ResultServiceImpl(
         return try{
             resultRepository.findAll()
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            throw RuntimeException(UNABLE_TO_FIND_RESULTS, e)
         }
     }
 
@@ -54,19 +66,23 @@ class ResultServiceImpl(
         return try {
             resultRepository.findByUserCode(userCode = userCode)
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            throw RuntimeException("Unable to find Result by userCode: $userCode", e)
         }
     }
 
     override fun findResultsByExamCodeAndUserCode(examCode: String, userCode: String): List<Result> {
         return try {
-            resultRepository.findByEmailCodeAndUserCode(userCode = userCode, emailCode = examCode)
+            resultRepository.findByExamCodeAndUserCode(userCode = userCode, emailCode = examCode)
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            throw RuntimeException("Unable to find result with examCode: $examCode and userCode: $userCode", e)
         }
     }
 
     override fun deleteByCode(code: String) {
-        resultRepository.deleteByCode(code = code)
+        try{
+            resultRepository.deleteByCode(code = code)
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to delete result with code: $code", e)
+        }
     }
 }

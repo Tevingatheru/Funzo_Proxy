@@ -4,7 +4,6 @@ import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.domain.exam.Exam
 import jakarta.persistence.*
 
-
 @Entity
 @Table(name = "results")
 data class Result(
@@ -32,8 +31,5 @@ data class Result(
         student = student,
         code = code,
         score = score,
-        ) {
-        attemptNo++
-    }
-
+        )
 }
