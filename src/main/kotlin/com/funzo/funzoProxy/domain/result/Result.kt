@@ -12,24 +12,29 @@ data class Result(
     val id: Long?,
 
     @ManyToOne
-    @JoinColumn(name = "exam_code", referencedColumnName = "code")
+    @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = false)
     val exam: Exam,
 
     @ManyToOne
-    @JoinColumn(name = "student_code", referencedColumnName = "code")
+    @JoinColumn(name = "student_code", referencedColumnName = "code", nullable = false)
     val student: User,
 
     @Column(unique = true)
     val code: String,
 
-    val score: String,
+    @Column(nullable = false)
+    val score: Double,
 
     var attemptNo: Int = 0
 ){
-    constructor(exam: Exam, student: User, code: String, score: String) : this(id = null,
+    constructor(exam: Exam, student: User, code: String, score: Double) : this(id = null,
         exam = exam,
         student = student,
         code = code,
         score = score,
         )
+
+    fun incrementsAttemptNo(): Int {
+        return this.attemptNo++
+    }
 }

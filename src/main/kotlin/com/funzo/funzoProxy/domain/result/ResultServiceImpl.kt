@@ -1,7 +1,5 @@
 package com.funzo.funzoProxy.domain.result
 
-import com.funzo.funzoProxy.domain.exam.Exam
-import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
@@ -23,21 +21,19 @@ class ResultServiceImpl(
         const val UNABLE_TO_FIND_RESULTS = "Unable to find results"
     }
 
-    override fun createResult(examCode: String, userCode: String, score: String): Result {
+    override fun createResult(examCode: String, userCode: String, score: Double): Result {
         try {
-            val exam: Exam = examRepository.findByCode(examCode = examCode) ?: throw NotFoundException()
-            val studentUser: User = userRepository.findStudentByUserCode(userCode) ?: throw NotFoundException()
-            val resultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
-            val code = generateCodeServiceImpl.generateCodeWithLength(7)
             var result = Result(
-                exam = exam,
-                student = studentUser,
-                code = code,
+                exam = examRepository.findByCode(examCode = examCode) ?: throw NotFoundException(),
+                student = userRepository.findStudentByUserCode(userCode) ?: throw NotFoundException(),
+                code = generateCodeServiceImpl.generateCodeWithLength(7),
                 score = score
             )
+
+            val resultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
+
             if (resultList.isNotEmpty()) {
-                val lastResult = resultList.sortedBy { it.attemptNo }.get(0)
-                result.attemptNo = lastResult.attemptNo + 1
+                attemptNoIncrement(resultList, result)
             }
             return resultRepository.saveAndFlush(result)
         } catch (e: Exception) {
@@ -82,6 +78,19 @@ class ResultServiceImpl(
             resultRepository.deleteByCode(code = code)
         } catch (e: Exception) {
             throw RuntimeException("Unable to delete result with code: $code", e)
+        }
+    }
+
+    private fun attemptNoIncrement(
+        resultList: List<Result>,
+        result: Result
+    ) {
+        try {
+            val lastResult = resultList.sortedBy { it.attemptNo }.get(0)
+            result.attemptNo = lastResult.incrementsAttemptNo()
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to increment attempt number. examCode: ${result.exam.code}, " +
+                    "userCode: ${result.student.code}, code: ${result.code}")
         }
     }
 }

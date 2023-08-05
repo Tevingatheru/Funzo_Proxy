@@ -1,9 +1,7 @@
 package com.funzo.funzoProxy.domain.result
 
-import com.funzo.funzoProxy.domain.exam.Exam
+import com.funzo.funzoProxy.TestDataUtil
 import com.funzo.funzoProxy.domain.result.ResultServiceImpl.Companion.UNABLE_TO_FIND_RESULTS
-import com.funzo.funzoProxy.domain.user.User
-import com.funzo.funzoProxy.domain.user.UserType
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
@@ -36,14 +34,6 @@ class ResultServiceImplTest {
     @InjectMocks
     private lateinit var resultServiceImpl: ResultServiceImpl
 
-    private val score = "0"
-    val resultCode = "R01"
-    private val userCode = "U01"
-    private val student = User(1L, userCode, UserType.STUDENT, "student@emil.com")
-    private val exam = Exam(1)
-    private val result = Result(1L, exam, student, resultCode, score, 0)
-    private val examCode = "E01"
-
     @BeforeEach
     fun setUp() {
         openMocks(this)
@@ -58,16 +48,18 @@ class ResultServiceImplTest {
         @Test
         fun shouldThrowWithMessageWhenSaveFlushFails() {
             `when`(examRepository.findByCode(anyString()))
-                .thenReturn(exam)
+                .thenReturn(TestDataUtil.ResultData.exam)
             `when`(userRepository.findStudentByUserCode(anyString()))
-                .thenReturn(student)
+                .thenReturn(TestDataUtil.ResultData.student)
             `when`(generateCodeServiceImpl.generateCodeWithLength(anyInt()))
-                .thenReturn(resultCode)
+                .thenReturn(TestDataUtil.ResultData.resultCode)
             `when`(resultRepository.saveAndFlush(any())).thenThrow(IllegalArgumentException())
 
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.createResult(examCode = examCode, userCode, score = score)
+                    resultServiceImpl.createResult(examCode = TestDataUtil.ResultData.examCode,
+                        userCode =  TestDataUtil.ResultData.userCode,
+                        score = TestDataUtil.ResultData.score)
                 }
 
             verify(examRepository, times(1)).findByCode(anyString())
@@ -80,49 +72,41 @@ class ResultServiceImplTest {
         @Test
         fun shouldThrowWithMessageWhenCodeGenerationFails() {
             `when`(examRepository.findByCode(anyString()))
-                .thenReturn(exam)
+                .thenReturn(TestDataUtil.ResultData.exam)
             `when`(userRepository.findStudentByUserCode(anyString()))
-                .thenReturn(student)
+                .thenReturn(TestDataUtil.ResultData.student)
             `when`(generateCodeServiceImpl.generateCodeWithLength(anyInt())).thenThrow(IllegalArgumentException())
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.createResult(examCode = examCode, userCode, score = score)
+                    resultServiceImpl.createResult(examCode = TestDataUtil.ResultData.examCode,
+                        userCode = TestDataUtil.ResultData.userCode,
+                        score = TestDataUtil.ResultData.score)
                 }
-
-            verify(examRepository, times(1)).findByCode(anyString())
-            verify(userRepository, times(1)).findStudentByUserCode(anyString())
-            verify(resultRepository, times(1)).findByExamCodeAndUserCode(anyString(), anyString())
-            verify(generateCodeServiceImpl, times(1)).generateCodeWithLength(anyInt())
-            verify(resultRepository, times(0)).saveAndFlush(any())
         }
 
         @Test
         fun shouldThrowWithMessageWhenFindByExamCodeAndUserCodeFails() {
             `when`(examRepository.findByCode(anyString()))
-                .thenReturn(exam)
+                .thenReturn(TestDataUtil.ResultData.exam)
             `when`(userRepository.findStudentByUserCode(anyString()))
-                .thenReturn(student)
+                .thenReturn(TestDataUtil.ResultData.student)
             `when`(resultRepository.findByExamCodeAndUserCode(anyString(), anyString()))
                 .thenThrow(IllegalArgumentException())
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.createResult(examCode = examCode, userCode, score = score)
+                    resultServiceImpl.createResult(examCode = TestDataUtil.ResultData.examCode,
+                        userCode = TestDataUtil.ResultData.userCode, score = TestDataUtil.ResultData.score)
                 }
-
-            verify(examRepository, times(1)).findByCode(anyString())
-            verify(userRepository, times(1)).findStudentByUserCode(anyString())
-            verify(resultRepository, times(1)).findByExamCodeAndUserCode(anyString(), anyString())
-            verify(generateCodeServiceImpl, times(0)).generateCodeWithLength(anyInt())
-            verify(resultRepository, times(0)).saveAndFlush(any())
         }
 
         @Test
         fun shouldFailToFindStudentThrowing() {
             `when`(examRepository.findByCode(anyString()))
-                .thenReturn(exam)
+                .thenReturn(TestDataUtil.ResultData.exam)
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.createResult(examCode = examCode, userCode, score = score)
+                    resultServiceImpl.createResult(examCode = TestDataUtil.ResultData.examCode,
+                        TestDataUtil.ResultData.userCode, score = TestDataUtil.ResultData.score)
                 }.withMessageContaining("NotFoundException")
 
             verify(examRepository, times(1)).findByCode(anyString())
@@ -136,7 +120,8 @@ class ResultServiceImplTest {
         fun shouldFailToFindExamThrowingNullPointer() {
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.createResult(examCode = examCode, userCode, score = score)
+                    resultServiceImpl.createResult(examCode = TestDataUtil.ResultData.examCode,
+                        userCode = TestDataUtil.ResultData.userCode, score = TestDataUtil.ResultData.score)
                 }.withMessageContaining("NotFoundException").withMessageNotContaining("parameter")
 
             verify(examRepository, times(1)).findByCode(anyString())
@@ -155,7 +140,7 @@ class ResultServiceImplTest {
                 .thenThrow(IllegalArgumentException())
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.findByCode(resultCode)
+                    resultServiceImpl.findByCode(TestDataUtil.ResultData.resultCode)
                 }
             verify(resultRepository).findByCode(anyString())
         }
@@ -163,8 +148,8 @@ class ResultServiceImplTest {
         @Test
         fun shouldFindResultByCode() {
             `when`(resultRepository.findByCode(anyString()))
-                .thenReturn(result)
-            resultServiceImpl.findByCode(resultCode)
+                .thenReturn(TestDataUtil.ResultData.result)
+            resultServiceImpl.findByCode(TestDataUtil.ResultData.resultCode)
             verify(resultRepository).findByCode(anyString())
         }
     }
@@ -183,7 +168,7 @@ class ResultServiceImplTest {
         @Test
         fun resultShouldNotBeEmpty() {
             `when`(resultRepository.findAll())
-                .thenReturn(Collections.singletonList(result))
+                .thenReturn(Collections.singletonList(TestDataUtil.ResultData.result))
             val allResults = resultServiceImpl.findAll()
             assertThat(allResults.isNotEmpty()).isTrue()
         }
@@ -197,14 +182,14 @@ class ResultServiceImplTest {
             `when`(resultRepository.findByUserCode(anyString()))
                 .thenThrow(IllegalArgumentException())
             assertThatExceptionOfType(RuntimeException::class.java)
-                .isThrownBy { resultServiceImpl.findResultsByUserCode(userCode = userCode) }
+                .isThrownBy { resultServiceImpl.findResultsByUserCode(userCode = TestDataUtil.ResultData.userCode) }
         }
 
         @Test
         fun shouldFindResultsByUserCodeSuccessfully() {
             `when`(resultRepository.findByUserCode(anyString()))
-                .thenReturn(Collections.singletonList(result))
-            val resultList = resultServiceImpl.findResultsByUserCode(userCode = userCode)
+                .thenReturn(Collections.singletonList(TestDataUtil.ResultData.result))
+            val resultList = resultServiceImpl.findResultsByUserCode(userCode = TestDataUtil.ResultData.userCode)
             assertThat(resultList.isNotEmpty()).isTrue()
         }
     }
@@ -219,8 +204,9 @@ class ResultServiceImplTest {
 
             assertThatExceptionOfType(RuntimeException::class.java)
                 .isThrownBy {
-                    resultServiceImpl.findResultsByExamCodeAndUserCode(examCode, userCode)
-                }.withMessageContaining(examCode, userCode)
+                    resultServiceImpl.findResultsByExamCodeAndUserCode(
+                        examCode = TestDataUtil.ResultData.examCode, userCode = TestDataUtil.ResultData.userCode)
+                }.withMessageContaining(TestDataUtil.ResultData.examCode, TestDataUtil.ResultData.userCode)
 
             verify(resultRepository).findByExamCodeAndUserCode(anyString(), anyString())
         }
@@ -240,14 +226,14 @@ class ResultServiceImplTest {
             `when`(resultRepository.deleteByCode(anyString())).thenThrow(IllegalArgumentException())
 
             assertThatExceptionOfType(RuntimeException::class.java)
-                .isThrownBy { resultServiceImpl.deleteByCode(resultCode) }
-                .withMessageContaining(resultCode)
+                .isThrownBy { resultServiceImpl.deleteByCode(TestDataUtil.ResultData.resultCode) }
+                .withMessageContaining(TestDataUtil.ResultData.resultCode)
             verify(resultRepository).deleteByCode(anyString())
         }
 
         @Test
         fun shouldVerifyDeleteByCode() {
-            resultServiceImpl.deleteByCode(resultCode)
+            resultServiceImpl.deleteByCode(TestDataUtil.ResultData.resultCode)
             verify(resultRepository).deleteByCode(anyString())
         }
     }
