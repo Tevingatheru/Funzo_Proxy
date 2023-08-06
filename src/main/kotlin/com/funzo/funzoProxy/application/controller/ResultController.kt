@@ -1,39 +1,45 @@
 package com.funzo.funzoProxy.application.controller
 
+import com.funzo.funzoProxy.application.command.CreateResultCommand
+import com.funzo.funzoProxy.application.command.DeleteResultByCodeCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
+import com.funzo.funzoProxy.application.controller.request.CreateResultRequest
+import com.funzo.funzoProxy.application.query.FetchResultsByExamCodeAndUserCodeQuery
+import com.funzo.funzoProxy.application.query.FetchUserByCodeQuery
+import com.funzo.funzoProxy.application.query.FindAllResultsQuery
+import com.funzo.funzoProxy.application.query.FindResultsByUserCodeQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBus
+import com.funzo.funzoProxy.infrastructure.dto.*
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/results")
 class ResultController(
     private val commandBus: CommandBus,
-                        private val queryBus: QueryBus) {
+    private val queryBus: QueryBus) {
 
     @PostMapping
     fun createResult(
-        @RequestParam examCode: String,
-        @RequestParam userCode: String,
-        @RequestParam score: Double
+        @RequestBody request: CreateResultRequest
     ): CreateResultDto {
         return try {
-            commandBus.dispatch(CreateResultCommand(examCode = examCode, userCode = userCode, score = score))
+            commandBus.dispatch(CreateResultCommand(examCode = request.examCode, userCode = request.userCode, score = request.score))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    @GetMapping("/{code}")
-    fun findByCode(@PathVariable code: String): QueryResultDto {
+    @GetMapping("/code/{code}")
+    fun findByCode(@PathVariable("code") code: String): QueryResultDto {
         return try{
-            queryBus.execute(findByCode(code))
+            queryBus.execute(FetchUserByCodeQuery(code))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    @GetMapping
-    fun findAll(): QueryAllResultsDto {
+    @GetMapping("/all")
+    fun findAll(): QuerylResultListDto {
         return try {
             queryBus.execute(FindAllResultsQuery())
         } catch (e: Exception) {
@@ -42,7 +48,7 @@ class ResultController(
     }
 
     @GetMapping("/user/{userCode}")
-    fun findResultsByUserCode(@PathVariable userCode: String): QueryResultsByUserCodeDto {
+    fun findResultsByUserCode(@PathVariable userCode: String): QuerylResultListDto {
         return try{
             queryBus.execute(FindResultsByUserCodeQuery(userCode = userCode))
         } catch (e: Exception) {
@@ -54,18 +60,18 @@ class ResultController(
     fun findResultsByExamCodeAndUserCode(
         @PathVariable examCode: String,
         @PathVariable userCode: String
-    ): ResultsByExamCodeAndUserCodeDto {
+    ): QuerylResultListDto {
         return try {
-            queryBus.execute(QueryResultsByExamCodeAndUserCode(examCode, userCode))
+            queryBus.execute(FetchResultsByExamCodeAndUserCodeQuery(examCode, userCode))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    @DeleteMapping("/{code}")
+    @DeleteMapping("/delete/{code}")
     fun deleteByCode(@PathVariable code: String) {
         try {
-            commandBus.dispatch(DeleteResultByCode(code = code))
+            commandBus.dispatch(DeleteResultByCodeCommand(code = code))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
