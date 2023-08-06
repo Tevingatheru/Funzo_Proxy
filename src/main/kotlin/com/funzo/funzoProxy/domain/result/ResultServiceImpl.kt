@@ -4,6 +4,8 @@ import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
+import com.funzo.funzoProxy.infrastructure.util.LogLevel
+import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
@@ -45,6 +47,7 @@ class ResultServiceImpl(
         return try {
             resultRepository.findByCode(code = code)
         } catch (e: Exception) {
+            LoggerUtils.log(LogLevel.WARN, "Unable to find result by code: $code", this::class.java)
             throw RuntimeException(e)
         }
     }
@@ -86,11 +89,12 @@ class ResultServiceImpl(
         result: Result
     ) {
         try {
-            val lastResult = resultList.sortedBy { it.attemptNo }.get(0)
-            result.attemptNo = lastResult.incrementsAttemptNo()
+            result.attemptNo = resultList.sortedBy(Result::attemptNo)
+                .get(0)
+                .incrementAttemptNo()
         } catch (e: Exception) {
-            throw RuntimeException("Unable to increment attempt number. examCode: ${result.exam.code}, " +
-                    "userCode: ${result.student.code}, code: ${result.code}")
+            throw RuntimeException("Unable to increment attempt number. examCode: ${result.exam!!.code}, " +
+                    "userCode: ${result.student!!.code}, code: ${result.code}")
         }
     }
 }

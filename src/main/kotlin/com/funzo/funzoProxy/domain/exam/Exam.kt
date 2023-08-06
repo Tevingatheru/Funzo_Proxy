@@ -4,23 +4,22 @@ import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.domain.subject.Subject
 import jakarta.persistence.*
 
-
 @Entity
 @Table(name = "exams")
 data class Exam(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long?,
+    val id: Long? = 0,
 
     @ManyToOne
     @JoinColumn(name = "subject_code", referencedColumnName = "code")
-    var subject: Subject?,
+    var subject: Subject? = null,
 
     @Column(unique = true, name = "code")
-    val code: String?,
+    val code: String? = null,
 
     @Column
-    val level: Int?,
+    val level: Int? = null,
 
     @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL], orphanRemoval = true)
     val questions: MutableList<Question>? = mutableListOf()

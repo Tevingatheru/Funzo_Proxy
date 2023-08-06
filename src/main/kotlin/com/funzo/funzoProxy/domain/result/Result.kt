@@ -9,21 +9,21 @@ import jakarta.persistence.*
 data class Result(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long?,
+    val id: Long? = 0,
 
     @ManyToOne
     @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = false)
-    val exam: Exam,
+    val exam: Exam? = null,
 
     @ManyToOne
     @JoinColumn(name = "student_code", referencedColumnName = "code", nullable = false)
-    val student: User,
+    val student: User? = null,
 
     @Column(unique = true)
-    val code: String,
+    val code: String? = null,
 
     @Column(nullable = false)
-    val score: Double,
+    val score: Double? = null,
 
     var attemptNo: Int = 0
 ){
@@ -34,7 +34,7 @@ data class Result(
         score = score,
         )
 
-    fun incrementsAttemptNo(): Int {
-        return this.attemptNo++
+    fun incrementAttemptNo(): Int {
+        return ++this.attemptNo
     }
 }

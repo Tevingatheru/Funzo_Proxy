@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-data class QuerylResultListDto(
+data class QueryResultListDto(
     var resultList: List<QueryResultDto> = ArrayList()
 ) {
     fun add(queryResultDto: QueryResultDto) {

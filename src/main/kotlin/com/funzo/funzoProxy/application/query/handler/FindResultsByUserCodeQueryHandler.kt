@@ -3,14 +3,14 @@ package com.funzo.funzoProxy.application.query.handler
 import com.funzo.funzoProxy.application.query.FindResultsByUserCodeQuery
 import com.funzo.funzoProxy.application.mapper.ResultDtoMapper
 import com.funzo.funzoProxy.domain.result.ResultService
-import com.funzo.funzoProxy.infrastructure.dto.QuerylResultListDto
+import com.funzo.funzoProxy.infrastructure.dto.QueryResultListDto
 import org.springframework.stereotype.Component
 
 @Component
 class FindResultsByUserCodeQueryHandler(
     private val resultService: ResultService
-): QueryHandler<QuerylResultListDto, FindResultsByUserCodeQuery> {
-    override fun handle(query: FindResultsByUserCodeQuery): QuerylResultListDto {
+): QueryHandler<QueryResultListDto, FindResultsByUserCodeQuery> {
+    override fun handle(query: FindResultsByUserCodeQuery): QueryResultListDto {
         return ResultDtoMapper
             .mapToQueryAllResultsDto(
                 resultService.findResultsByUserCode(userCode = query.userCode))
