@@ -10,7 +10,10 @@ data class MultipleChoiceQuestion(
 
     @ManyToOne
     @JoinColumn(name = "question_code")
-    val question: Question? = null,
+    override val question: Question? = null,
+
+    @Column(name = "code")
+    override val code: String? = null,
 
     @Column(name = "option_a")
     val optionA: String? = null,

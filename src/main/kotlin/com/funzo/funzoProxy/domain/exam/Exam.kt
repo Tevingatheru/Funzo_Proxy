@@ -34,19 +34,4 @@ data class Exam(
     fun addQuestion(question: Question) {
         questions?.add(question)
     }
-
-    fun findQuestionByCode(code: String): Question {
-        var question: Question = Question()
-        for (iteration : Question in questions!!) {
-            if(iteration.code == code) {
-                question = iteration
-            }
-        }
-
-        if (question == null) {
-            throw NotFoundException()
-        }
-
-        return question
-    }
 }
