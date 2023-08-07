@@ -8,16 +8,10 @@ data class TrueOrFalseQuestion(
     @Id
     override val id: Long? = 0,
 
-    @ManyToOne
-    @JoinColumn(name = "question_code")
-    val question: Question? = null,
 
     @Column(name = "correct_option")
-    val correctOption: Boolean? = null
+    val correctOption: Boolean?
 ): QuestionType(){
-    //    constructor() : this(id = null, question = null, correctOption = null)
-    constructor(question: Question, correctOption: Boolean, code: String) : this(
-        correctOption = correctOption,
-        question = question,
-        )
+    constructor() : this(null, null)
+
 }

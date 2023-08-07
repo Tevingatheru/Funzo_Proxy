@@ -27,6 +27,4 @@ data class MultipleChoiceQuestion(
     @Column(name = "correct_option")
     val correctOption: String? = null
 ) : QuestionType() {
-//    constructor() :
-//            this(null, null, null, null, null, null, null)
 }

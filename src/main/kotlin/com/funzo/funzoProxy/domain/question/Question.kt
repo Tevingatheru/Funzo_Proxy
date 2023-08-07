@@ -8,10 +8,10 @@ import jakarta.persistence.*
 data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long?,
+    val id: Long = 0,
 
     @ManyToOne
-    @JoinColumn(name = "exam_code")
+    @JoinColumn(name = "exam_code", referencedColumnName = "code")
     val exam: Exam,
 
     @Column(unique = true, name = "code")
@@ -33,7 +33,4 @@ data class Question(
         type: QuestionType?,
         image: String?
     ) : this(0, exam, null, question, type, image)
-
-//    constructor(): this(id = null, exam = Exam(), code = null, question = null, type = null, image = null)
-
 }

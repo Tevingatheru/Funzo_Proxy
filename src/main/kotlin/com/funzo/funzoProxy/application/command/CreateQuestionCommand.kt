@@ -13,6 +13,4 @@ data class CreateQuestionCommand(
     val optionC: String?,
     val optionD: String?
 ): Command<AddQuestionResponse> {
-//    constructor(questionText: String, image: String, questionType: String) :
-//            this(questionType = questionText, image =  image, questionType = questionType, null,)
 }

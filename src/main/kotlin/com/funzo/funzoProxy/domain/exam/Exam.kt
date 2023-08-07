@@ -11,10 +11,10 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 data class Exam(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int?,
+    val id: Long?,
 
     @ManyToOne
-    @JoinColumn(name = "subject_code")
+    @JoinColumn(name = "subject_code", referencedColumnName = "code")
     var subject: Subject?,
 
     @Column(unique = true, name = "code")

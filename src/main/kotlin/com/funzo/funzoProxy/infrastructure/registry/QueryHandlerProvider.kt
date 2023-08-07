@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext
  *
  * @param H The type of QueryHandler this provider can provide.
  */
-class QueryHandlerProvider< H : QueryHandler<*, *>> (
+class QueryHandlerProvider<H : QueryHandler<*, *>> (
     private val applicationContext: ApplicationContext,
     private val type: Class<H>
 ){
