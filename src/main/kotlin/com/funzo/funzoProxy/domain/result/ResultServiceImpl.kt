@@ -7,6 +7,7 @@ import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
 import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -43,9 +44,11 @@ class ResultServiceImpl(
         }
     }
 
-    override fun findByCode(code: String): Result {
+    override fun findByCode(code: String): Result? {
         return try {
             resultRepository.findByCode(code = code)
+        } catch (e: EmptyResultDataAccessException) {
+            return null
         } catch (e: Exception) {
             LoggerUtils.log(LogLevel.WARN, "Unable to find result by code: $code", this::class.java)
             throw RuntimeException(e)

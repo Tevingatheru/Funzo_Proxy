@@ -37,8 +37,8 @@ class ResultController(
     }
 
     @GetMapping("/code/{code}")
-    fun findByCode(@PathVariable("code") code: String): QueryResultDto {
-        return try{
+    fun findByCode(@PathVariable("code") code: String): QueryResultDto? {
+        return try {
             queryBus.execute(FetchUserByCodeQuery(code))
         } catch (e: Exception) {
             throw RuntimeException(e)
@@ -50,7 +50,8 @@ class ResultController(
         return try {
             queryBus.execute(FindAllResultsQuery())
         } catch (e: Exception) {
-            throw RuntimeException()
+            LoggerUtils.log(LogLevel.ERROR, "Unable to get results", this::class.java)
+            throw RuntimeException(e)
         }
     }
 
@@ -59,7 +60,7 @@ class ResultController(
         return try{
             queryBus.execute(FindResultsByUserCodeQuery(userCode = userCode))
         } catch (e: Exception) {
-            throw RuntimeException()
+            throw RuntimeException(e)
         }
     }
 

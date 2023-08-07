@@ -9,8 +9,9 @@ import org.springframework.stereotype.Component
 @Component
 class FetchUserByCodeQueryHandler(
     private val resultService: ResultService
-): QueryHandler<QueryResultDto, FetchUserByCodeQuery> {
-    override fun handle(query: FetchUserByCodeQuery): QueryResultDto {
-        return ResultDtoMapper.mapToQueryResultDto(resultService.findByCode(query.code))
+): QueryHandler<QueryResultDto?, FetchUserByCodeQuery> {
+    override fun handle(query: FetchUserByCodeQuery): QueryResultDto? {
+        val result = resultService.findByCode(query.code) ?: return null
+        return ResultDtoMapper.mapToQueryResultDto(result)
     }
 }

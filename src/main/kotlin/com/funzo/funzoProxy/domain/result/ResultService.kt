@@ -3,7 +3,7 @@ package com.funzo.funzoProxy.domain.result
 interface ResultService {
     fun createResult(examCode: String, userCode: String, score: Double): Result
 
-    fun findByCode(code: String) : Result
+    fun findByCode(code: String) : Result?
 
     fun findAll() : List<Result>
 
