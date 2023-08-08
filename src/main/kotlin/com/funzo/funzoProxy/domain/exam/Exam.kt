@@ -25,7 +25,6 @@ data class Exam(
     @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL], orphanRemoval = true)
     val questions: MutableList<Question>? = mutableListOf()
 ) {
-    constructor(level: Int, code: String) : this(null, null, code, level,null)
     constructor(level: Int) : this(null, null, null, level, null)
 
     fun addQuestion(question: Question) {
