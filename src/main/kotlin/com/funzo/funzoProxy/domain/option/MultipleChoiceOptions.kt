@@ -1,12 +1,11 @@
-package com.funzo.funzoProxy.domain.question
+package com.funzo.funzoProxy.domain.option
 
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "multiple_choice_answers")
-data class MultipleChoiceQuestion(
-    @Id
-    override val id: Long?,
+@PrimaryKeyJoinColumn(name = "option_id")
+data class MultipleChoiceOptions(
 
     @Column(name = "option_a")
     val optionA: String?,
@@ -22,7 +21,7 @@ data class MultipleChoiceQuestion(
 
     @Column(name = "correct_option")
     val correctOption: String?
-) : QuestionType() {
+) : Option() {
     constructor() :
-            this(null, null, null, null, null, null)
+            this(optionA = null, optionB = null, optionC = null, optionD = null, correctOption = null)
 }

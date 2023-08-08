@@ -18,7 +18,7 @@ class CreateExamCommandHandler(@Autowired private val examService: ExamService):
     override fun handle(command: CreateExamCommand): CreateExamCommandResponse {
         val exam = Exam(command.level)
         command.questions.forEach { questionCommand ->
-            val question = Question(exam, questionCommand.questionText, questionCommand.questionType, questionCommand.image)
+            val question = Question(exam, questionCommand.questionText, questionCommand.option, questionCommand.image)
             exam.addQuestion(question)
         }
         return mapToResponse(examService.save(exam))

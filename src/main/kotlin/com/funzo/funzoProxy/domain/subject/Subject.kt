@@ -2,7 +2,6 @@ package com.funzo.funzoProxy.domain.subject
 
 import jakarta.persistence.*
 
-
 @Entity
 @Table(name = "subjects")
 data class Subject(
