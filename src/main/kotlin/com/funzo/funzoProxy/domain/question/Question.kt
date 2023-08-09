@@ -11,7 +11,7 @@ data class Question(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = true)
     val exam: Exam,
 

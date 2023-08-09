@@ -12,7 +12,7 @@ data class Exam(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long?,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_code", referencedColumnName = "code")
     var subject: Subject?,
 
@@ -22,7 +22,8 @@ data class Exam(
     @Column
     val level: Int?,
 
-    @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL],
+        orphanRemoval = true, fetch = FetchType.LAZY)
     val questions: MutableList<Question>? = mutableListOf()
 ) {
     constructor(level: Int) : this(null, null, null, level, null)

@@ -12,11 +12,11 @@ data class Result(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code")
     val exam: Exam,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_code", referencedColumnName = "code")
     val student: User,
 
