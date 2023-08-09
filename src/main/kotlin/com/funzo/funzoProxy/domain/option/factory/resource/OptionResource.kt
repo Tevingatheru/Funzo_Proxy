@@ -1,4 +1,4 @@
-package com.funzo.funzoProxy.domain.option.factory
+package com.funzo.funzoProxy.domain.option.factory.resource
 
 data class OptionResource(
     val optionA: String?,
