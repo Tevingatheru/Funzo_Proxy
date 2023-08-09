@@ -5,23 +5,22 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "multiple_choice_answers")
 @PrimaryKeyJoinColumn(name = "option_id")
-data class MultipleChoiceOptions(
+data class MultipleChoiceOption(
 
     @Column(name = "option_a")
-    val optionA: String?,
+    val optionA: String? = null,
 
     @Column(name = "option_b")
-    val optionB: String?,
+    val optionB: String? = null,
 
     @Column(name = "option_c")
-    val optionC: String?,
+    val optionC: String? = null,
 
     @Column(name = "option_d")
-    val optionD: String?,
+    val optionD: String? = null,
 
     @Column(name = "correct_option")
-    val correctOption: String?
+    val correctOption: String? = null
 ) : Option() {
-    constructor() :
-            this(optionA = null, optionB = null, optionC = null, optionD = null, correctOption = null)
+
 }

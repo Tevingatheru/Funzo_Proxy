@@ -3,7 +3,6 @@ package com.funzo.funzoProxy.domain.option
 import com.funzo.funzoProxy.domain.question.Question
 import jakarta.persistence.*
 
-//@Table(name = "options")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorValue(value = "option_code")
@@ -12,7 +11,7 @@ abstract class Option {
     @GeneratedValue(strategy = GenerationType.TABLE)
     val id: Long? = 0
 
-    @Column(name = "code")
+    @Column(name = "code", nullable = false)
     val code: String? = null
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -25,8 +24,8 @@ abstract class Option {
          */
         fun find(questionType: String): Option {
             return when (questionType) {
-                OptionTypes.TRUE_OR_FALSE.optionTypeName -> TrueOrFalseOption()
-                OptionTypes.MULTIPLE_CHOICE.optionTypeName -> MultipleChoiceOptions()
+                OptionType.TRUE_OR_FALSE.optionTypeName -> TrueOrFalseOption()
+                OptionType.MULTIPLE_CHOICE.optionTypeName -> MultipleChoiceOption()
                 else -> throw IllegalArgumentException("Invalid question type: $questionType")
             }
         }
