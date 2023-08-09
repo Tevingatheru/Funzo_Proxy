@@ -4,7 +4,6 @@ import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.domain.subject.Subject
 import jakarta.persistence.*
 
-
 @Entity
 @Table(name = "exams")
 data class Exam(

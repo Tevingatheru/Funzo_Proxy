@@ -12,5 +12,8 @@ interface UserRepository: JpaRepository<User, Long> {
     @Query(value = "SELECT EXISTS (SELECT 1 FROM users WHERE users.email = :email AND users.type = :type )",
         nativeQuery = true)
     fun checkIfUserExistsByTypeAndEmail(@Param("type") userType: String, @Param("email") email: String): Int
+    @Query(value = "SELECT * FROM users WHERE code = :userCode and type = 'STUDENT'",
+        nativeQuery = true)
+    fun findStudentByUserCode(userCode: String): User
 
 }
