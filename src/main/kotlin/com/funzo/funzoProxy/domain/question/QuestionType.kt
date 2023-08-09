@@ -23,10 +23,15 @@ abstract class QuestionType {
          */
         fun find(questionType: String): QuestionType {
             return when (questionType) {
-                "true_or_false" -> TrueOrFalseQuestion()
-                "multiple_choice" -> MultipleChoiceQuestion()
+                QuestionTypeEnum.TRUE_OR_FALSE.type -> TrueOrFalseQuestion()
+                QuestionTypeEnum.MCQ.type -> MultipleChoiceQuestion()
                 else -> throw IllegalArgumentException("Invalid question type: $questionType")
             }
         }
     }
+}
+
+enum class QuestionTypeEnum(val type: String) {
+    TRUE_OR_FALSE("true_or_false"),
+    MCQ("multiple_choice")
 }

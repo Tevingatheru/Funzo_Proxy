@@ -2,7 +2,6 @@ package com.funzo.funzoProxy.infrastructure
 
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -35,14 +34,8 @@ class GenerateCodeServiceImplTest {
 
     @ParameterizedTest(name = "generateCodeWithLength of {0}")
     @MethodSource("com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImplTest#codeLengthProvider")
-    fun generateCodeWithLength(length: Int) {
+    fun shouldGenerateCodeWithLength(length: Int) {
         val code = generateCodeService.generateCodeWithLength(length)
-        println(code)
         assertThat(code.length).isEqualTo(length)
-    }
-
-    @Test
-    fun generateUniqueCode() {
-
     }
 }

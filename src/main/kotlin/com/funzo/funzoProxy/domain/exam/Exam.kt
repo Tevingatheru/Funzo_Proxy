@@ -9,13 +9,13 @@ import jakarta.persistence.*
 data class Exam(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = 0,
+    val id: Long? = null,
 
     @ManyToOne
     @JoinColumn(name = "subject_code", referencedColumnName = "code")
     var subject: Subject? = null,
 
-    @Column(unique = true, name = "code")
+    @Column(unique = true, name = "code", nullable = false)
     val code: String? = null,
 
     @Column
@@ -24,10 +24,7 @@ data class Exam(
     @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL], orphanRemoval = true)
     val questions: MutableList<Question>? = mutableListOf()
 ) {
-    constructor(level: Int, code: String) : this(null, null, code, level,null)
-    constructor(level: Int) : this(null, null, null, level, null)
+    constructor(level: Int, code: String, subject: Subject)
+            : this(null, subject, code, level,null)
 
-    fun addQuestion(question: Question) {
-        questions?.add(question)
-    }
 }

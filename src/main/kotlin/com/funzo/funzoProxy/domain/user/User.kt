@@ -7,15 +7,20 @@ import jakarta.persistence.*
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = 0,
+    val id: Long? = null,
 
     @Column(unique = true, name = "code")
     val code: String? = null,
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     val type: UserType? = null,
 
-    @Column(name = "email")
-    val email: String? = null
-)
+    @Column(name = "email", nullable = false)
+    var email: String? = null
+
+) {
+    constructor(code: String, userType: UserType, email: String) : this(
+        null, code = code, type = userType, email = email
+    )
+}
