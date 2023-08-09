@@ -1,5 +1,7 @@
 package com.funzo.funzoProxy.application.controller.response
 
-class CreateExamCommandResponse {
-
-}
+data class CreateExamCommandResponse (
+    val code: String,
+    val level: Int,
+    val subject: String?
+)
