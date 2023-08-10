@@ -21,7 +21,7 @@ class GetQuestionByCodeQueryHandler(
             code = question.code,
             text = question.question,
             questionType = question.type.toString(),
-            examCode = question.exam.code
+            examCode = question.exam!!.code
             )
     }
 }

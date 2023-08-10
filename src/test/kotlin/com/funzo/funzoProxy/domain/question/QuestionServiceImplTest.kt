@@ -1,5 +1,6 @@
 package com.funzo.funzoProxy.domain.question
 
+import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.QuestionRepository
 import org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType
@@ -16,6 +17,9 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 
 class QuestionServiceImplTest {
     @Mock
+    private lateinit var generateCodeServiceImpl: GenerateCodeServiceImpl
+
+    @Mock
     private lateinit var questionRepository: QuestionRepository
     @Mock
     private lateinit var examRepository: ExamRepository
@@ -26,7 +30,10 @@ class QuestionServiceImplTest {
     @BeforeEach
     fun setUp() {
         openMocks(this)
-        questionServiceImpl = QuestionServiceImpl(questionRepository = questionRepository, examRepository = examRepository)
+        questionServiceImpl = QuestionServiceImpl(
+            questionRepository = questionRepository,
+            examRepository = examRepository,
+            generateCodeServiceImpl = generateCodeServiceImpl)
     }
 
     @Nested
@@ -34,15 +41,15 @@ class QuestionServiceImplTest {
         @Test
         fun throwsExceptionWhenGetExamFails() {
             assertThatExceptionOfType(NotFoundException::class.java).isThrownBy {
-                questionServiceImpl.addQuestion("E01", "Question", TrueOrFalseQuestion(), null,)
+                questionServiceImpl.addQuestion(examCode = "E01", questionText = "Question", image = null,)
             }
         }
 
         @Test
         fun questionIsSaved() {
-            `when`(questionRepository.saveAndFlush(any())).thenReturn()
+            `when`(questionRepository.saveAndFlush(any())).thenReturn(Question())
             assertThatExceptionOfType(NotFoundException::class.java).isThrownBy {
-                questionServiceImpl.addQuestion("E01", "Question", TrueOrFalseQuestion(), null,)
+                questionServiceImpl.addQuestion(examCode = "E01", questionText = "Question", image = null,)
             }
         }
     }

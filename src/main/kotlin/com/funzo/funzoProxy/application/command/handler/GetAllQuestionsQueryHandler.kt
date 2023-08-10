@@ -22,7 +22,7 @@ class GetAllQuestionsQueryHandler(
         val questionListDto : QuestionListDto = QuestionListDto()
         allQuestions.forEach {
             questionListDto.add(QuestionDto(
-                examCode = it.exam.code,
+                examCode = it.exam!!.code,
                 questionType = it.type.toString(),
                 text = it.question,
                 code = it.code

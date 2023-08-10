@@ -19,33 +19,13 @@ class QuestionServiceImpl(
     override fun addQuestion(
         examCode: String,
         questionText: String,
-        questionType: QuestionType,
         image: String?,
-        correctOption: String,
-        optionA: String?,
-        optionB: String?,
-        optionC: String?,
-        optionD: String?
     ): AddQuestionResponse {
-        val exam: Exam = getExamByCode(examCode)
-
-        val questionTypeCode = generateCodeServiceImpl.generateCodeWithLength(7)
-        val questionTypeObject = QuestionType.generateQuestionType(
-            questionType,
-            correctOption = correctOption,
-            question = Question(exam = exam, question = questionText, type = null, image = null),
-            optionA = optionA,
-            optionB = optionB,
-            optionC = optionC,
-            optionD = optionD,
-            code = questionTypeCode
-        )
-        val questionCode = generateCodeServiceImpl.generateCodeWithLength(7)
-        val addedQuestion = Question(exam = exam,
+        val addedQuestion = Question(exam = getExamByCode(examCode),
             question = questionText,
-            type =  questionType,
+            type =  null,
             image = image,
-            code = questionCode,
+            code = generateCodeServiceImpl.generateCodeWithLength(7),
             id = null)
 
         questionRepository.saveAndFlush(addedQuestion)
@@ -67,7 +47,6 @@ class QuestionServiceImpl(
         examCode: String,
         questionCode: String,
         questionText: String?,
-        questionType: QuestionType?,
         questionImage: String?
     ): EditQuestionResponse {
         getExamByCode(examCode = examCode)

@@ -3,14 +3,8 @@ package com.funzo.funzoProxy.domain.question
 interface QuestionService {
     fun addQuestion(
         examCode: String,
-        question: String,
-        questionType: QuestionType,
+        questionText: String,
         image: String?,
-        correctOption: String,
-        optionA: String?,
-        optionB: String?,
-        optionC: String?,
-        optionD: String?
     ): AddQuestionResponse
     fun removeQuestion(examCode: String, questionCode: String)
 
@@ -20,7 +14,6 @@ interface QuestionService {
         examCode: String,
         questionCode: String,
         questionText: String?,
-        questionType: QuestionType?,
         questionImage: String?
     ): EditQuestionResponse
 
