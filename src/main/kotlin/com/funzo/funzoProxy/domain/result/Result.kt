@@ -4,26 +4,37 @@ import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.domain.exam.Exam
 import jakarta.persistence.*
 
-
 @Entity
 @Table(name = "results")
 data class Result(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long? = 0,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code")
-    val exam: Exam,
+    val exam: Exam? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_code", referencedColumnName = "code")
-    val student: User,
+    val student: User? = null,
 
     @Column(unique = true)
-    val code: String,
+    val code: String? = null,
 
-    val score: String,
+    @Column(nullable = false)
+    val score: Double? = null,
 
-    val attempts: Int
-)
+    var attemptNo: Int = 0
+){
+    constructor(exam: Exam, student: User, code: String, score: Double) : this(id = null,
+        exam = exam,
+        student = student,
+        code = code,
+        score = score,
+        )
+
+    fun incrementAttemptNo(): Int {
+        return ++this.attemptNo
+    }
+}

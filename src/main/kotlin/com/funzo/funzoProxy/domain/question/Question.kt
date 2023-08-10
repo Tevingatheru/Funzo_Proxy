@@ -1,6 +1,7 @@
 package com.funzo.funzoProxy.domain.question
 
 import com.funzo.funzoProxy.domain.exam.Exam
+import com.funzo.funzoProxy.domain.option.Option
 import jakarta.persistence.*
 
 @Entity
@@ -10,8 +11,8 @@ data class Question(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
 
-    @ManyToOne
-    @JoinColumn(name = "exam_code", referencedColumnName = "code")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = true)
     val exam: Exam,
 
     @Column(unique = true, name = "code")
@@ -20,9 +21,9 @@ data class Question(
     @Column(name = "question")
     var question: String?,
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    @JoinColumn(name = "question_type_code")
-    var type: QuestionType?,
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "question")
+    @JoinColumn(name = "option_code", referencedColumnName = "code")
+    val type: Option,
 
     @Column(name = "image")
     var image: String?
@@ -30,7 +31,7 @@ data class Question(
     constructor(
         exam: Exam,
         question: String,
-        type: QuestionType?,
-        image: String?
+        type: Option,
+        image: String
     ) : this(0, exam, null, question, type, image)
 }
