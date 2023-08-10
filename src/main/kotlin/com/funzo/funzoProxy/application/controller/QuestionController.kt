@@ -7,8 +7,8 @@ import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.AddQuestionRequest
 import com.funzo.funzoProxy.application.controller.request.EditQuestionRequest
 import com.funzo.funzoProxy.application.controller.response.AddQuestionCommandResponse
-import com.funzo.funzoProxy.application.controller.response.ExamQuestionsQueryResponse
-import com.funzo.funzoProxy.application.query.ExamQuestionsQuery
+import com.funzo.funzoProxy.application.controller.response.QuestionsByExamCodeResponse
+import com.funzo.funzoProxy.application.query.QuestionsByExamCodeQuery
 import com.funzo.funzoProxy.application.query.GetAllQuestionsQuery
 import com.funzo.funzoProxy.application.query.GetQuestionByCodeQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBus
@@ -32,10 +32,11 @@ class QuestionController (
     private val queryBus: QueryBus
 ){
     @PostMapping("/add")
-    fun addQuestion(@RequestBody addQuestionRequest: AddQuestionRequest): AddQuestionCommandResponse
+    fun addQuestion(@RequestBody request: AddQuestionRequest): AddQuestionCommandResponse
     {
         try {
             val addQuestionCommand: AddQuestionCommand = AddQuestionCommand(
+                examCode = request.examCode, image = request.image , questionText = request.questionText
             )
             return commandBus.dispatch(addQuestionCommand)
         } catch (e: Exception) {
@@ -59,14 +60,14 @@ class QuestionController (
     }
 
     @GetMapping("/exam/code")
-    fun getExamQuestions(@RequestParam(value = "examCode", required = true) examCode: String)
-    : ExamQuestionsQueryResponse
+    fun getQuestionsByExamCode(@RequestParam(value = "examCode", required = true) examCode: String)
+    : QuestionsByExamCodeResponse
     {
         try {
-            val getExamQuestionsQuery = ExamQuestionsQuery(
+            val getQuestionsByExamCodeQuery = QuestionsByExamCodeQuery(
                 examCode = examCode
             )
-            return queryBus.execute(getExamQuestionsQuery)
+            return queryBus.execute(getQuestionsByExamCodeQuery)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
@@ -79,7 +80,8 @@ class QuestionController (
     }
 
     @GetMapping("all")
-    fun getAllQuestions() : QuestionListDto {
+    fun getAllQuestions() : QuestionListDto
+    {
         return queryBus.execute(GetAllQuestionsQuery())
     }
 
@@ -91,7 +93,6 @@ class QuestionController (
                 examCode = modifyQuestionRequest.examCode,
                 questionCode = modifyQuestionRequest.code,
                 question = modifyQuestionRequest.question,
-                questionType = modifyQuestionRequest.questionType,
                 image = modifyQuestionRequest.image,
             )
 

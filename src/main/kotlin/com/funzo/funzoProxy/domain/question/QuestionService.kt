@@ -6,7 +6,7 @@ interface QuestionService {
         questionText: String,
         image: String?,
     ): AddQuestionResponse
-    fun removeQuestion(examCode: String, questionCode: String)
+    fun removeQuestion(questionCode: String)
 
     fun getQuestionsByExamCode(examCode: String): ExamQuestionsResponse
 
@@ -15,7 +15,7 @@ interface QuestionService {
         questionCode: String,
         questionText: String?,
         questionImage: String?
-    ): EditQuestionResponse
+    ): Question
 
     fun getQuestionByCode(code: String): Question
 

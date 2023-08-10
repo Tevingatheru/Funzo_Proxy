@@ -33,22 +33,25 @@ class QuestionServiceImpl(
         return mapToAddQuestionsResponse(addedQuestion)
     }
 
-    override fun removeQuestion(examCode: String, questionCode: String) {
-        getExamByCode(examCode)
+    override fun removeQuestion(questionCode: String) {
+
         questionRepository.delete(getQuestionByCode(questionCode))
     }
 
     override fun getQuestionsByExamCode(examCode: String): ExamQuestionsResponse {
         val exam = getExamByCode(examCode = examCode)
-        return ExamQuestionsResponse(exam.questions)
+
+        return mapToExamQuestionsResponse(exam)
     }
+
+    private fun mapToExamQuestionsResponse(exam: Exam) = ExamQuestionsResponse(exam.questions)
 
     override fun modifyQuestion(
         examCode: String,
         questionCode: String,
         questionText: String?,
         questionImage: String?
-    ): EditQuestionResponse {
+    ): Question {
         getExamByCode(examCode = examCode)
 
         var question: Question = getQuestionByCode(code = questionCode)
@@ -61,7 +64,7 @@ class QuestionServiceImpl(
             question.image = questionImage
         }
 
-        return mapToModifyQuestionResponse(question)
+        return question
     }
 
     override fun getAllQuestions(): List<Question> {
@@ -70,10 +73,6 @@ class QuestionServiceImpl(
 
     override fun getQuestionByCode(code: String): Question {
         return questionRepository.findByCode(code)
-    }
-
-    private fun mapToModifyQuestionResponse(question: Question): EditQuestionResponse {
-        return EditQuestionResponse(question.code, question.image, question.question)
     }
 
     private fun mapToAddQuestionsResponse(question: Question): AddQuestionResponse {

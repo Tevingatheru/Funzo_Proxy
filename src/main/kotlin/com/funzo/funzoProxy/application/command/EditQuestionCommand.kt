@@ -6,7 +6,6 @@ class EditQuestionCommand(
     val examCode: String,
     val questionCode: String,
     val question: String?,
-    val questionType: String,
     val image: String?
 ): Command<EditQuestionResponse> {
 
