@@ -22,25 +22,36 @@ class QuestionServiceImpl(
         questionText: String,
         image: String?,
     ): Question {
-        val addedQuestion = Question(exam = getExamByCode(examCode),
-            question = questionText,
-            type =  null,
-            image = image,
-            code = generateCodeServiceImpl.generateCodeWithLength(7),
-            id = null)
+        try {
+            val addedQuestion = Question(exam = getExamByCode(examCode),
+                question = questionText,
+                type =  null,
+                image = image,
+                code = generateCodeServiceImpl.generateCodeWithLength(7),
+                id = null)
 
-        return questionRepository.saveAndFlush(addedQuestion)
+            return questionRepository.saveAndFlush(addedQuestion)
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to add questions. examCode: $examCode")
+        }
     }
 
     override fun removeQuestion(questionCode: String) {
-
-        questionRepository.delete(getQuestionByCode(questionCode))
+        try {
+            questionRepository.delete(getQuestionByCode(questionCode))
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to delete questions. code: $questionCode")
+        }
     }
 
     override fun getQuestionsByExamCode(examCode: String): List<Question> {
-        val exam = getExamByCode(examCode = examCode)
+        try {
+            val exam = getExamByCode(examCode = examCode)
 
-        return exam.questions!!
+            return exam.questions!!
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to get questions by examCode. examCode : $examCode")
+        }
     }
 
     override fun modifyQuestion(
@@ -49,30 +60,46 @@ class QuestionServiceImpl(
         questionText: String?,
         questionImage: String?
     ): Question {
-        getExamByCode(examCode = examCode)
+        try {
+            getExamByCode(examCode = examCode)
 
-        var question: Question = getQuestionByCode(code = questionCode)
+            var question: Question = getQuestionByCode(code = questionCode)
 
-        if (questionText != null) {
-            question.question = questionText
+            if (questionText != null && !questionText.equals(question.question)) {
+                question.question = questionText
+            }
+
+            if (questionImage != null && !questionImage.equals(questionImage)) {
+                question.image = questionImage
+            }
+
+            return questionRepository.saveAndFlush(question)
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to modify question. ExamCode: $examCode, code $questionCode")
         }
-
-        if (questionImage != null) {
-            question.image = questionImage
-        }
-
-        return question
     }
 
     override fun getAllQuestions(): List<Question> {
-        return questionRepository.findAll()
+        return try {
+            questionRepository.findAll()
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to get all questions")
+        }
     }
 
     override fun getQuestionByCode(code: String): Question {
-        return questionRepository.findByCode(code)
+        return try {
+            questionRepository.findByCode(code)
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to get question by code: $code")
+        }
     }
 
     private fun getExamByCode(examCode: String): Exam {
-        return examRepository.findByCode(examCode) ?: throw NotFoundException()
+        return try {
+            examRepository.findByCode(examCode) ?: throw NotFoundException()
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to find exam with code: $examCode")
+        }
     }
 }

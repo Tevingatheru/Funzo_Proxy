@@ -40,6 +40,7 @@ class QuestionController (
             )
             return commandBus.dispatch(addQuestionCommand)
         } catch (e: Exception) {
+//            LoggerUtils.log(level = LogLevel.ERROR, message = "Unable to add question", className = this::class.java)
             throw RuntimeException(e)
         }
     }
@@ -59,8 +60,8 @@ class QuestionController (
         }
     }
 
-    @GetMapping("/exam/code")
-    fun getQuestionsByExamCode(@RequestParam(value = "examCode", required = true) examCode: String)
+    @GetMapping("/exam")
+    fun getQuestionsByExamCode(@RequestParam(value = "examCode") examCode: String)
     : ExamQuestionsDto
     {
         try {
@@ -92,7 +93,7 @@ class QuestionController (
             val editQuestionCommand = EditQuestionCommand(
                 examCode = modifyQuestionRequest.examCode,
                 questionCode = modifyQuestionRequest.code,
-                question = modifyQuestionRequest.question,
+                question = modifyQuestionRequest.questionText,
                 image = modifyQuestionRequest.image,
             )
 

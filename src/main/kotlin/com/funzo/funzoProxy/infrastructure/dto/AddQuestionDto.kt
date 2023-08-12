@@ -1,5 +1,5 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-class AddQuestionDto(code: String?) {
+data class AddQuestionDto(val code: String?) {
 
 }
