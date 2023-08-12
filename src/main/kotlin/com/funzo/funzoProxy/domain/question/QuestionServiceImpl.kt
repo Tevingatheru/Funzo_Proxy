@@ -2,6 +2,7 @@ package com.funzo.funzoProxy.domain.question
 
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.AddQuestionDto
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.QuestionRepository
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -20,7 +21,7 @@ class QuestionServiceImpl(
         examCode: String,
         questionText: String,
         image: String?,
-    ): AddQuestionResponse {
+    ): Question {
         val addedQuestion = Question(exam = getExamByCode(examCode),
             question = questionText,
             type =  null,
@@ -28,9 +29,7 @@ class QuestionServiceImpl(
             code = generateCodeServiceImpl.generateCodeWithLength(7),
             id = null)
 
-        questionRepository.saveAndFlush(addedQuestion)
-
-        return mapToAddQuestionsResponse(addedQuestion)
+        return questionRepository.saveAndFlush(addedQuestion)
     }
 
     override fun removeQuestion(questionCode: String) {
@@ -38,13 +37,11 @@ class QuestionServiceImpl(
         questionRepository.delete(getQuestionByCode(questionCode))
     }
 
-    override fun getQuestionsByExamCode(examCode: String): ExamQuestionsResponse {
+    override fun getQuestionsByExamCode(examCode: String): List<Question> {
         val exam = getExamByCode(examCode = examCode)
 
-        return mapToExamQuestionsResponse(exam)
+        return exam.questions!!
     }
-
-    private fun mapToExamQuestionsResponse(exam: Exam) = ExamQuestionsResponse(exam.questions)
 
     override fun modifyQuestion(
         examCode: String,
@@ -73,10 +70,6 @@ class QuestionServiceImpl(
 
     override fun getQuestionByCode(code: String): Question {
         return questionRepository.findByCode(code)
-    }
-
-    private fun mapToAddQuestionsResponse(question: Question): AddQuestionResponse {
-        return AddQuestionResponse(code = question.code)
     }
 
     private fun getExamByCode(examCode: String): Exam {

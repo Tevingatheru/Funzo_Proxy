@@ -1,21 +1,19 @@
 package com.funzo.funzoProxy.application.mapper
 
-import com.funzo.funzoProxy.application.controller.response.AddQuestionCommandResponse
-import com.funzo.funzoProxy.application.controller.response.QuestionsByExamCodeResponse
-import com.funzo.funzoProxy.domain.question.AddQuestionResponse
-import com.funzo.funzoProxy.domain.question.EditQuestionResponse
-import com.funzo.funzoProxy.domain.question.ExamQuestionsResponse
+import com.funzo.funzoProxy.infrastructure.dto.AddQuestionDto
+import com.funzo.funzoProxy.infrastructure.dto.EditQuestionDto
+import com.funzo.funzoProxy.infrastructure.dto.ExamQuestionsDto
 import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.infrastructure.dto.QuestionDto
 import com.funzo.funzoProxy.infrastructure.dto.QuestionListDto
 
 object QuestionDtoMapper {
-    fun mapToQuestionsByExamCodeResponse(examQuestionsResponse: ExamQuestionsResponse): QuestionsByExamCodeResponse {
-        TODO("Not yet implemented")
+    fun mapToQuestionsByExamCodeResponse(questions: MutableList<Question>): ExamQuestionsDto {
+        return ExamQuestionsDto(questions)
     }
 
-    fun mapToAddQuestionCommandResponse(addQuestion: AddQuestionResponse): AddQuestionCommandResponse {
-        TODO("Not yet implemented")
+    fun mapToAddQuestionCommandResponse(question: Question): AddQuestionDto {
+        return AddQuestionDto(code = question.code)
     }
 
     fun mapToQuestionDto(question: Question): QuestionDto {
@@ -40,7 +38,7 @@ object QuestionDtoMapper {
         return questionListDto
     }
 
-    fun mapToEditQuestionResponse(question: Question): EditQuestionResponse {
-        return EditQuestionResponse(question.code, question.image, question.question)
+    fun mapToEditQuestionResponse(question: Question): EditQuestionDto {
+        return EditQuestionDto(question.code, question.image, question.question)
     }
 }
