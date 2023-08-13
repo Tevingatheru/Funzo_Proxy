@@ -66,7 +66,7 @@ class OptionServiceImpl (
         }
     }
 
-    override fun getByQuestionCode(questionCode: String): Option {
+    override fun getByQuestionCode(questionCode: String): List<Option> {
         return try {
             optionRepository.getByQuestionCode(questionCode = questionCode)
         } catch (e: Exception) {
@@ -100,6 +100,14 @@ class OptionServiceImpl (
             ))
         } catch (e: Exception) {
             throw RuntimeException("Unable to update option. code: $code", e)
+        }
+    }
+
+    override fun findAll(): List<Option> {
+        return try {
+            optionRepository.findAll()
+        } catch (e: Exception) {
+            throw RuntimeException("Unable to find all options", e)
         }
     }
 }

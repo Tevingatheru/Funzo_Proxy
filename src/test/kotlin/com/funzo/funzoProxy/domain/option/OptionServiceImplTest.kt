@@ -224,4 +224,22 @@ class OptionServiceImplTest {
                 }.withMessageContaining("Unable to update option. code")
         }
     }
+
+    @Nested
+    inner class FetchingAll {
+        @Test
+        fun shouldFindAllSuccessfully() {
+            optionServiceImpl.findAll()
+        }
+
+        @Test
+        fun shouldThrowExceptionWithMessage() {
+            `when`(optionRepository.findAll())
+                .thenThrow(IllegalArgumentException::class.java)
+
+            assertThatExceptionOfType(RuntimeException::class.java).isThrownBy {
+                optionServiceImpl.findAll()
+            }.withMessageContaining("Unable to find all options")
+        }
+    }
 }

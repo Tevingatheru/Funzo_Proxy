@@ -10,6 +10,6 @@ interface OptionRepository: JpaRepository<Option, Long> {
 
     fun getByCode(code: String): Option
 
-    fun getByQuestionCode(questionCode: String): Option
+    fun getByQuestionCode(questionCode: String): List<Option>
 
 }
