@@ -5,6 +5,7 @@ import com.funzo.funzoProxy.application.command.DeleteOptionByCodeCommand
 import com.funzo.funzoProxy.application.command.ModifyOptionCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateOptionRequest
+import com.funzo.funzoProxy.application.controller.request.ModifyOptionRequest
 import com.funzo.funzoProxy.application.query.GetAllOptionsQuery
 import com.funzo.funzoProxy.application.query.GetOptionByCodeQuery
 import com.funzo.funzoProxy.application.query.GetQuestionOptionsQuery
@@ -26,28 +27,35 @@ class OptionController(
     private val commandBus: CommandBus,
     private val queryBus: QueryBus
 ) {
-    @PostMapping
+    @PostMapping("/create")
     fun createOption(@RequestBody request: CreateOptionRequest) : OptionDto {
         return try {
-            commandBus.dispatch(CreateOptionCommand())
+            commandBus.dispatch(CreateOptionCommand(
+                optionA = request.optionA,
+                optionB = request.optionB,
+                optionC = request.optionC,
+                optionD = request.optionD,
+                correctOption = request.correctOption,
+                questionCode = request.questionCode
+            ))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     fun deleteByCode(@RequestParam("code") code: String) {
         try {
-            commandBus.dispatch(DeleteOptionByCodeCommand())
+            commandBus.dispatch(DeleteOptionByCodeCommand(code = code))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    @GetMapping("code")
+    @GetMapping("/code")
     fun getByCode(@RequestParam("code") code: String): OptionDto {
         return try {
-            queryBus.execute(GetOptionByCodeQuery())
+            queryBus.execute(GetOptionByCodeQuery(code = code))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
@@ -56,13 +64,13 @@ class OptionController(
     @GetMapping("/question/code")
     fun getOptionsByQuestionCode(@RequestParam("questionCode") questionCode: String): OptionListDto {
         return try {
-            queryBus.execute(GetQuestionOptionsQuery())
+            queryBus.execute(GetQuestionOptionsQuery(questionCode = questionCode))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
     }
 
-    @GetMapping("all")
+    @GetMapping("/all")
     fun getAllOptions() : OptionListDto {
         return try {
             queryBus.execute(GetAllOptionsQuery())
@@ -71,10 +79,16 @@ class OptionController(
         }
     }
 
-    @PutMapping
-    fun modifyOption(): OptionDto {
+    @PutMapping("edit")
+    fun modifyOption(@RequestBody request: ModifyOptionRequest): OptionDto {
         return try {
-            commandBus.dispatch(ModifyOptionCommand())
+            commandBus.dispatch(ModifyOptionCommand(optionA = request.optionA,
+                optionB = request.optionB,
+                optionC = request.optionC,
+                optionD = request.optionD,
+                correctOption = request.correctOption,
+                code = request.code
+                ))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

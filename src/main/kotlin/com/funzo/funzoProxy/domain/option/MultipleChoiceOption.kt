@@ -4,7 +4,7 @@ import com.funzo.funzoProxy.domain.question.Question
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "multiple_choice_answers")
+@Table(name = "multiple_choice_options")
 @PrimaryKeyJoinColumn(name = "option_id")
 data class MultipleChoiceOption(
 
@@ -35,5 +35,6 @@ data class MultipleChoiceOption(
     ) : this(optionA, optionB, optionC, optionD, correctOption) {
         this.code = code
         this.question = question
+        this.id = 0
     }
 }

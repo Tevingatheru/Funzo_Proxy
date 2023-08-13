@@ -9,17 +9,17 @@ import jakarta.persistence.*
 data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = 0,
+    val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = true)
     val exam: Exam? = null,
 
-    @Column(unique = true, name = "code")
-    val code: String?,
+    @Column(unique = true, name = "code", nullable = false)
+    val code: String? = null,
 
     @Column(name = "question")
-    val question: String,
+    val question: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "question")
     @JoinColumn(name = "option_code", referencedColumnName = "code")

@@ -1,12 +1,12 @@
 package com.funzo.funzoProxy.application.controller.request
 
-class CreateOptionRequest(
+class ModifyOptionRequest(
     val optionA: String?,
     val optionB: String?,
     val optionC: String?,
     val optionD: String?,
     val correctOption: String,
-    val questionCode: String
+    val code: String
 ) {
 
 }

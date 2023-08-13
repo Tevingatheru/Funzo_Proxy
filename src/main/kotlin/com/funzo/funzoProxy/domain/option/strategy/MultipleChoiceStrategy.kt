@@ -2,9 +2,7 @@ package com.funzo.funzoProxy.domain.option.strategy
 
 import com.funzo.funzoProxy.domain.option.MultipleChoiceOption
 import com.funzo.funzoProxy.domain.option.Option
-import org.springframework.stereotype.Component
 
-@Component
 class MultipleChoiceStrategy(private var multipleChoiceOption: MultipleChoiceOption) : UpdateStrategy {
 
     override fun execute(dto: OptionUpdateOperation): Option {

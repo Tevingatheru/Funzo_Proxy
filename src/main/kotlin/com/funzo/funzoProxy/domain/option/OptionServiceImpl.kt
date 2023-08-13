@@ -1,6 +1,8 @@
 package com.funzo.funzoProxy.domain.option
 
+import com.funzo.funzoProxy.domain.option.factory.MultipleChoiceOptionFactory
 import com.funzo.funzoProxy.domain.option.factory.OptionFactory
+import com.funzo.funzoProxy.domain.option.factory.TrueOrFalseOptionFactory
 import com.funzo.funzoProxy.domain.option.factory.resource.OptionFactoryResource
 import com.funzo.funzoProxy.domain.option.strategy.MultipleChoiceStrategy
 import com.funzo.funzoProxy.domain.option.strategy.OptionUpdateOperation
@@ -9,7 +11,10 @@ import com.funzo.funzoProxy.domain.option.strategy.UpdateStrategy
 import com.funzo.funzoProxy.infrastructure.GenerateCodeService
 import com.funzo.funzoProxy.infrastructure.jpa.OptionRepository
 import com.funzo.funzoProxy.infrastructure.jpa.QuestionRepository
+import com.funzo.funzoProxy.infrastructure.util.LogLevel
+import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,19 +25,29 @@ class OptionServiceImpl (
     @Autowired private val optionRepository: OptionRepository,
     @Autowired private val questionRepository: QuestionRepository,
     private val generateCodeService: GenerateCodeService,
-    private val optionFactory: OptionFactory,
-    private var updateStrategy: UpdateStrategy
+    @Autowired(required = false)
+    @Qualifier("optionFactory")
+    private var optionFactory: OptionFactory? = null,
+    @Autowired(required = false)
+    @Qualifier("updateStrategy")
+    private var updateStrategy: UpdateStrategy? = null
 ): OptionService {
     override fun createOption(
-        optionA: String,
-        optionB: String,
-        optionC: String,
-        optionD: String,
+        optionA: String?,
+        optionB: String?,
+        optionC: String?,
+        optionD: String?,
         correctOption: String,
         questionCode: String
     ): Option {
         return try {
-            val option = optionFactory.create(
+            optionFactory = if (optionA == null && optionB == null && optionC == null &&
+                optionD == null) {
+                TrueOrFalseOptionFactory()
+            } else {
+                MultipleChoiceOptionFactory()
+            }
+            val option = optionFactory!!.create(
                 OptionFactoryResource(
                     optionA = optionA,
                     optionB = optionB,
@@ -52,9 +67,30 @@ class OptionServiceImpl (
 
     override fun deleteByCode(code: String) {
         try {
-            optionRepository.deleteByCode(code = code)
+            val option = this.getByCode(code)
+            when (option) {
+                is MultipleChoiceOption -> {
+                    LoggerUtils.log(
+                        level = LogLevel.INFO,
+                        message = "Deleting MultipleChoiceOption by id. id: ${option.id}",
+                        className = this::class.java
+                    )
+                    optionRepository.deleteMultipleChoiceOptionId(option.id!!)
+                }
+                is TrueOrFalseOption -> {
+                    LoggerUtils.log(
+                        level = LogLevel.INFO,
+                        message = "Deleting TrueOrFalseOptionByOption by id. id: ${option.id}",
+                        className = this::class.java
+                    )
+                    optionRepository.deleteTrueOrFalseOptionByOptionId(option.id!!)
+                }
+            }
+            option.let {
+                optionRepository.deleteByCode(it.code!!)
+            }
         } catch (e: Exception) {
-            throw RuntimeException()
+            throw RuntimeException("Unable to delete option. code: $code", e)
         }
     }
 
@@ -93,7 +129,7 @@ class OptionServiceImpl (
                 }
             }
 
-            optionRepository.saveAndFlush(updateStrategy.execute(
+            optionRepository.saveAndFlush(updateStrategy!!.execute(
                 OptionUpdateOperation(
                     correctOption = correctOption
                 )

@@ -20,6 +20,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.openMocks
 import java.lang.IllegalArgumentException
+import java.util.*
 import java.util.stream.Stream
 
 class OptionServiceImplTest {
@@ -171,8 +172,8 @@ class OptionServiceImplTest {
         @Test
         fun getByQuestionCode() {
             `when`(optionRepository.getByQuestionCode(anyString()))
-                .thenReturn(TestDataUtil.OptionData.randomOption())
-            val option = optionServiceImpl.getByQuestionCode(
+                .thenReturn(Collections.singletonList(TestDataUtil.OptionData.randomOption()))
+            optionServiceImpl.getByQuestionCode(
                 questionCode = code
             )
             verify(optionRepository).getByQuestionCode(code)

@@ -1,5 +1,9 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-class OptionListDto {
-
+data class OptionListDto (
+    val options: MutableList<OptionDto> = mutableListOf()
+) {
+    fun add(optionDto: OptionDto) {
+        options.add(optionDto)
+    }
 }
