@@ -6,17 +6,18 @@ import jakarta.persistence.*
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorValue(value = "option_code")
-abstract class Option {
+abstract class Option (
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    val id: Long? = 0
+    val id: Long? = 0,
 
-    @Column(name = "code", nullable = false)
-    val code: String? = null
+    @Column(name = "code", nullable = false, unique = true)
+    var code: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_code", referencedColumnName = "code", nullable = false)
-    val question: Question? = null
+    var question: Question? = null
+) {
 
     companion object {
         /**

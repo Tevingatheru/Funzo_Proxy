@@ -6,4 +6,11 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface OptionRepository: JpaRepository<Option, Long> {
+    fun deleteByCode(code: String)
+
+    fun getByCode(code: String): Option
+
+    fun getByQuestionCode(questionCode: String): Option
+
+    fun findByCode(code: String): Option
 }
