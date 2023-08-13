@@ -12,5 +12,4 @@ interface OptionRepository: JpaRepository<Option, Long> {
 
     fun getByQuestionCode(questionCode: String): Option
 
-    fun findByCode(code: String): Option
 }

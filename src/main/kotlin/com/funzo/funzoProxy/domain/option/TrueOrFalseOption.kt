@@ -9,7 +9,7 @@ import jakarta.persistence.*
 data class TrueOrFalseOption(
 
     @Column(name = "correct_option")
-    val correctOption: Boolean? = null
+    var correctOption: Boolean? = null
 ): Option(){
     constructor(correctOption: Boolean, code: String, question: Question): this(correctOption = correctOption) {
         this.code = code

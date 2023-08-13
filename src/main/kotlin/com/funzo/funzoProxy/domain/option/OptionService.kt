@@ -16,5 +16,12 @@ interface OptionService {
 
     fun getByQuestionCode(questionCode: String): Option
 
-    fun modifyOption(code: String): Option
+    fun modifyOption(
+        code: String,
+        optionA: String?,
+        optionB: String?,
+        optionC: String?,
+        optionD: String?,
+        correctOption: String
+    ): Option
 }

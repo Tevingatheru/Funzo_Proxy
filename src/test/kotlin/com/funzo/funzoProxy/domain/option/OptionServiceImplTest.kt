@@ -2,6 +2,7 @@ package com.funzo.funzoProxy.domain.option
 
 import com.funzo.funzoProxy.TestDataUtil
 import com.funzo.funzoProxy.domain.option.factory.OptionFactory
+import com.funzo.funzoProxy.domain.option.strategy.UpdateStrategy
 import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.infrastructure.GenerateCodeService
 import com.funzo.funzoProxy.infrastructure.jpa.OptionRepository
@@ -16,9 +17,9 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations.openMocks
+import java.lang.IllegalArgumentException
 import java.util.stream.Stream
 
 class OptionServiceImplTest {
@@ -26,7 +27,6 @@ class OptionServiceImplTest {
         private const val option = "option"
         private const val question = "question"
         private const val code = "code"
-        private const val flush = "flush"
 
         @JvmStatic
         fun shouldThrowExceptionCausedByNullOptionProvider(): Stream<Arguments> {
@@ -39,6 +39,8 @@ class OptionServiceImplTest {
         }
     }
 
+    @Mock
+    private lateinit var updateStrategy: UpdateStrategy
     @Mock
     private lateinit var optionFactory: OptionFactory
     @Mock
@@ -57,7 +59,8 @@ class OptionServiceImplTest {
         optionServiceImpl = OptionServiceImpl(optionRepository = optionRepository,
             questionRepository = questionRepository,
             generateCodeService = generateCodeService,
-            optionFactory = optionFactory)
+            optionFactory = optionFactory,
+            updateStrategy = updateStrategy)
     }
 
     @Nested
@@ -70,7 +73,7 @@ class OptionServiceImplTest {
             `when`(optionFactory.create(any()))
                 .thenReturn(TestDataUtil.OptionData.randomOption())
 
-            val option = optionServiceImpl.createOption(optionA = TestDataUtil.OptionData.randomOptionText(),
+            optionServiceImpl.createOption(optionA = TestDataUtil.OptionData.randomOptionText(),
                 optionB = TestDataUtil.OptionData.randomOptionText(),
                 optionC = TestDataUtil.OptionData.randomOptionText(),
                 optionD = TestDataUtil.OptionData.randomOptionText(),
@@ -122,29 +125,103 @@ class OptionServiceImplTest {
 
     @Nested
     inner class DeletingOption {
+        private val expectedCode = TestDataUtil.OptionData.randomCode()
+
         @Test
-        fun deleteByCode() {
+        fun deleteByCodeSuccessfully() {
+            optionServiceImpl.deleteByCode(expectedCode)
+            verify(optionRepository).deleteByCode(expectedCode)
+        }
+
+        @Test
+        fun failToDeleteByCode() {
+            `when`(optionRepository.deleteByCode(anyString())).thenThrow(IllegalArgumentException())
+            assertThatExceptionOfType(RuntimeException::class.java).isThrownBy {
+                optionServiceImpl.deleteByCode(expectedCode)
+            }
+            verify(optionRepository).deleteByCode(expectedCode)
         }
     }
 
     @Nested
     inner class FetchingByCode {
         @Test
-        fun getByCode() {
+        fun canGetByCodeSuccessfully() {
+            val expectedCode = TestDataUtil.OptionData.randomCode()
+            optionServiceImpl.getByCode(expectedCode)
+            verify(optionRepository).getByCode(expectedCode)
+        }
+
+        @Test
+        fun failToGetByCode() {
+            `when`(optionRepository.getByCode(anyString()))
+                .thenThrow(IllegalArgumentException())
+            val expectedCode = TestDataUtil.OptionData.randomCode()
+            assertThatExceptionOfType(RuntimeException::class.java).isThrownBy {
+                optionServiceImpl.getByCode(expectedCode)
+            }.withMessageContaining("Unable to get option by code: code")
+            verify(optionRepository).getByCode(expectedCode)
         }
     }
 
     @Nested
     inner class FetchingByQuestionCode {
+        private val code = TestDataUtil.OptionData.randomCode()
+
         @Test
         fun getByQuestionCode() {
+            `when`(optionRepository.getByQuestionCode(anyString()))
+                .thenReturn(TestDataUtil.OptionData.randomOption())
+            val option = optionServiceImpl.getByQuestionCode(
+                questionCode = code
+            )
+            verify(optionRepository).getByQuestionCode(code)
+        }
+
+        @Test
+        fun failGetByQuestionCode() {
+            `when`(optionRepository.getByQuestionCode(anyString()))
+                .thenThrow(IllegalArgumentException())
+
+            assertThatExceptionOfType(RuntimeException::class.java).isThrownBy {
+                optionServiceImpl.getByQuestionCode(
+                    questionCode = code
+                )
+            }
+            verify(optionRepository).getByQuestionCode(code)
         }
     }
 
     @Nested
     inner class ModifyingOptionDetails {
         @Test
-        fun modifyOption() {
+        fun modifyOptionSuccessfully() {
+            `when`(optionRepository.getByCode(anyString()))
+                .thenReturn(TestDataUtil.OptionData.randomOption())
+            `when`(optionRepository.saveAndFlush(any())).thenReturn(TestDataUtil.OptionData.randomOption())
+
+            optionServiceImpl.modifyOption(code = TestDataUtil.OptionData.randomCode(),
+                optionA = TestDataUtil.OptionData.randomOptionText(),
+                optionB = TestDataUtil.OptionData.randomOptionText(),
+                optionC = TestDataUtil.OptionData.randomOptionText(),
+                optionD = TestDataUtil.OptionData.randomOptionText(),
+                correctOption = TestDataUtil.OptionData.randomOptionText())
+        }
+
+        @Test
+        fun throwExceptionCausedOptionNotFound() {
+            `when`(optionRepository.getByCode(anyString()))
+                .thenThrow(IllegalArgumentException())
+
+            assertThatExceptionOfType(RuntimeException::class.java)
+                .isThrownBy {
+                    optionServiceImpl.modifyOption(code = TestDataUtil.OptionData.randomCode(),
+                        optionA = TestDataUtil.OptionData.randomOptionText(),
+                        optionB = TestDataUtil.OptionData.randomOptionText(),
+                        optionC = TestDataUtil.OptionData.randomOptionText(),
+                        optionD = TestDataUtil.OptionData.randomOptionText(),
+                        correctOption = TestDataUtil.OptionData.randomOptionText())
+                }.withMessageContaining("Unable to update option. code")
         }
     }
 }

@@ -9,19 +9,19 @@ import jakarta.persistence.*
 data class MultipleChoiceOption(
 
     @Column(name = "option_a")
-    val optionA: String? = null,
+    var optionA: String? = null,
 
     @Column(name = "option_b")
-    val optionB: String? = null,
+    var optionB: String? = null,
 
     @Column(name = "option_c")
-    val optionC: String? = null,
+    var optionC: String? = null,
 
     @Column(name = "option_d")
-    val optionD: String? = null,
+    var optionD: String? = null,
 
     @Column(name = "correct_option")
-    val correctOption: String? = null,
+    var correctOption: String? = null,
 
     ) : Option() {
     constructor(
