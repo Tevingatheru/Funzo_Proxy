@@ -15,7 +15,7 @@ data class Question(
     @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = true)
     val exam: Exam? = null,
 
-    @Column(unique = true, name = "code")
+    @Column(unique = true, name = "code", nullable = false)
     val code: String? = null,
 
     @Column(name = "question")
@@ -23,7 +23,7 @@ data class Question(
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "question")
     @JoinColumn(name = "option_code", referencedColumnName = "code")
-    val type: Option? = null,
+    val option: Option? = null,
 
     @Column(name = "image")
     var image: String? = null

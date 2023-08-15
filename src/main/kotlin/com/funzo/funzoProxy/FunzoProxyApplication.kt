@@ -7,5 +7,9 @@ import org.springframework.boot.runApplication
 class FunzoProxyApplication
 
 fun main(args: Array<String>) {
-	runApplication<FunzoProxyApplication>(*args)
+	try {
+		runApplication<FunzoProxyApplication>(*args)
+	} catch (e: Exception) {
+		throw RuntimeException("Unable to start application.", e)
+	}
 }
