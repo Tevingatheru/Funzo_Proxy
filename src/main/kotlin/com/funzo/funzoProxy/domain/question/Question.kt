@@ -9,29 +9,24 @@ import jakarta.persistence.*
 data class Question(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = true)
-    val exam: Exam,
+    val exam: Exam? = null,
 
     @Column(unique = true, name = "code")
-    val code: String?,
+    val code: String? = null,
 
     @Column(name = "question")
-    val question: String,
+    var question: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "question")
     @JoinColumn(name = "option_code", referencedColumnName = "code")
-    val type: Option,
+    val type: Option? = null,
 
     @Column(name = "image")
-    val image: String
+    var image: String? = null
 ) {
-    constructor(
-        exam: Exam,
-        question: String,
-        type: Option,
-        image: String
-    ) : this(0, exam, null, question, type, image)
+
 }

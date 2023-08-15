@@ -3,6 +3,7 @@ package com.funzo.funzoProxy.domain.exam
 import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.domain.subject.Subject
 import jakarta.persistence.*
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 
 @Entity
 @Table(name = "exams")
