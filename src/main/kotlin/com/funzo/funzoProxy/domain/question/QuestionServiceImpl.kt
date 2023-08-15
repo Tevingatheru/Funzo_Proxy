@@ -2,7 +2,6 @@ package com.funzo.funzoProxy.domain.question
 
 import com.funzo.funzoProxy.domain.exam.Exam
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
-import com.funzo.funzoProxy.infrastructure.dto.AddQuestionDto
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.QuestionRepository
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -25,7 +24,7 @@ class QuestionServiceImpl(
         try {
             val addedQuestion = Question(exam = getExamByCode(examCode),
                 question = questionText,
-                type =  null,
+                option =  null,
                 image = image,
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
                 id = null)

@@ -12,6 +12,8 @@ import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.AddUserDetailsDto
 import com.funzo.funzoProxy.infrastructure.dto.GetAllUserDto
 import com.funzo.funzoProxy.infrastructure.dto.GetUserDto
+import com.funzo.funzoProxy.infrastructure.util.LogLevel
+import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -32,6 +34,7 @@ internal class UserController(
     fun createUser(@RequestBody createUserRequest: CreateUserRequest) : AddUserDetailsDto
     {
         return try {
+            LoggerUtils.log(LogLevel.INFO,"Creating user with email ${createUserRequest.email}", mapOf(), this::class.java)
             val command = AddUserDetailsCommand(
                 createUserRequest.userType,
                 createUserRequest.email

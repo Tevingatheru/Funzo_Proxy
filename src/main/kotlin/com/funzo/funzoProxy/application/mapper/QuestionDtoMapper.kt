@@ -20,7 +20,7 @@ object QuestionDtoMapper {
         return QuestionDto(
             code = question.code,
             text = question.question,
-            questionType = question.type.toString(),
+            questionType = question.option.toString(),
             examCode = question.exam!!.code
         )
     }
@@ -30,7 +30,7 @@ object QuestionDtoMapper {
         allQuestions.forEach {
             questionListDto.add(QuestionDto(
                 examCode = it.exam!!.code,
-                questionType = it.type.toString(),
+                questionType = it.option.toString(),
                 text = it.question,
                 code = it.code
             ))
