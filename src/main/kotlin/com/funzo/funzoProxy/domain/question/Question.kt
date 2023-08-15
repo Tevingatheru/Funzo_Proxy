@@ -19,14 +19,14 @@ data class Question(
     val code: String? = null,
 
     @Column(name = "question")
-    val question: String? = null,
+    var question: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "question")
     @JoinColumn(name = "option_code", referencedColumnName = "code")
-    val option: Option? = null,
+    val type: Option? = null,
 
     @Column(name = "image")
-    val image: String? = null
+    var image: String? = null
 ) {
 
 }
