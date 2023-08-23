@@ -26,6 +26,11 @@ class ExamServiceImpl(
 
     override fun save(level: Int, subjectCode: String): Exam {
         try {
+            val existingExams = examRepository.findBySubjectCode(subjectCode)
+            existingExams.forEach{
+                if (level == it.level)
+                    throw RuntimeException("Level Exists")
+            }
             val exam = Exam(
                 level = level,
                 code = generateCodeServiceImpl.generateCodeWithLength(7),

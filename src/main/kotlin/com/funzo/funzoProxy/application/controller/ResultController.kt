@@ -25,6 +25,7 @@ class ResultController(
         @RequestBody request: CreateResultRequest
     ): CreateResultDto {
         return try {
+            LoggerUtils.log(level = LogLevel.INFO, message = "Add results.", className = this::class.java)
             commandBus.dispatch(CreateResultCommand(examCode = request.examCode, userCode = request.userCode, score = request.score))
         } catch (e: Exception) {
             LoggerUtils.log(
