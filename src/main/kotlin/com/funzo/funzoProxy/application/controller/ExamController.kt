@@ -74,6 +74,11 @@ class ExamController(
     @GetMapping("subject")
     fun getSubjectExamList(@RequestParam subjectCode: String): ExamListDto {
         return try {
+            LoggerUtils.log(
+                level = LogLevel.INFO,
+                message = "Fetching exams by subject code: $subjectCode",
+                className = this::class.java
+            )
             val query = GetExamListBySubjectCodeQuery(
                 subjectCode = subjectCode
             )
@@ -87,6 +92,11 @@ class ExamController(
     @GetMapping()
     fun getAllSubjects(): ExamListDto {
         return try {
+            LoggerUtils.log(
+                level = LogLevel.INFO,
+                message = "Fetching all exams.",
+                className = this::class.java
+            )
             val query = GetExamListQuery()
 
             queryBusImpl.execute(query)
