@@ -7,4 +7,5 @@ interface UserService {
     fun deleteByCode(code: String): String
     fun findAll(): List<User>
     fun modifyUserEmail(email: String, code: String): User
+    fun findByEmail(email: String): User
 }

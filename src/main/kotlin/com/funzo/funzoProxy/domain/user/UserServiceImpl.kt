@@ -18,6 +18,10 @@ class UserServiceImpl(
     private val generateCodeService: GenerateCodeService
 ) : UserService
 {
+    override fun findByEmail(email: String) : User {
+        return userRepository.findByEmail(email = email)
+    }
+
     override fun findByCode(code: String): User {
         return try {
             userRepository.findByCode(code)

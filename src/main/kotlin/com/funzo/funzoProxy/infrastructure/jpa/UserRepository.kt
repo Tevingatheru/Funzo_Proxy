@@ -16,4 +16,5 @@ interface UserRepository: JpaRepository<User, Long> {
         nativeQuery = true)
     fun findStudentByUserCode(userCode: String): User
 
+    fun findByEmail(email: String) : User
 }
