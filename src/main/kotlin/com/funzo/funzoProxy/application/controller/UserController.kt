@@ -3,6 +3,7 @@ package com.funzo.funzoProxy.application.controller
 import com.funzo.funzoProxy.application.command.AddUserDetailsCommand
 import com.funzo.funzoProxy.application.command.ChangeUserEmailCommand
 import com.funzo.funzoProxy.application.command.DeleteUserByCodeCommand
+import com.funzo.funzoProxy.application.command.GetUserByEmailQuery
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.ChangeUserEmailRequest
 import com.funzo.funzoProxy.application.controller.request.CreateUserRequest
@@ -78,6 +79,23 @@ internal class UserController(
     fun changEmail(@RequestBody request: ChangeUserEmailRequest): GetUserDto {
         return try {
             commandBus.dispatch(ChangeUserEmailCommand(userCode = request.code, email = request.email))
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/email")
+    fun getUserByCode(@RequestParam("email") email: String): GetUserDto {
+        return try {
+            LoggerUtils.log(
+                level = LogLevel.INFO,
+                message = "Feting user by email.",
+                diagnosisMap = mapOf(Pair("email", email)),
+                className = this::class.java
+            )
+            queryBus.execute(GetUserByEmailQuery(
+                email = email
+            ))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
