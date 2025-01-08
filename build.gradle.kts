@@ -20,12 +20,11 @@ repositories {
 
 dependencies {
 	compileOnly("org.projectlombok:lombok:1.18.28")
-
 	compileOnly("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
-	// https://mvnrepository.com/artifact/io.github.serpro69/kotlin-faker
+	implementation("javax.servlet:javax.servlet-api:4.0.1")
+	implementation(dependencyNotation = "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	implementation ("io.github.serpro69:kotlin-faker:1.14.0")
-
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
