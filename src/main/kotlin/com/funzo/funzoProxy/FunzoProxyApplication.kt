@@ -8,7 +8,6 @@ import org.springframework.boot.runApplication
 @OpenAPIDefinition
 class FunzoProxyApplication
 
-
 fun main(args: Array<String>) {
 	try {
 		runApplication<FunzoProxyApplication>(*args)
