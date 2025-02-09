@@ -7,10 +7,12 @@ import com.funzo.funzoProxy.application.command.GetUserByEmailQuery
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.ChangeUserEmailRequest
 import com.funzo.funzoProxy.application.controller.request.CreateUserRequest
-import com.funzo.funzoProxy.application.query.GetAllExamsQuery
+import com.funzo.funzoProxy.application.query.GetAllUserCountQuery
+import com.funzo.funzoProxy.application.query.GetAllUsersQuery
 import com.funzo.funzoProxy.application.query.GetUserByCodeQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.AddUserDetailsDto
+import com.funzo.funzoProxy.infrastructure.dto.GetAllUserCountDto
 import com.funzo.funzoProxy.infrastructure.dto.GetAllUserDto
 import com.funzo.funzoProxy.infrastructure.dto.GetUserDto
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
@@ -69,7 +71,18 @@ internal class UserController(
     @GetMapping
     fun getAllUsers(): GetAllUserDto {
         return try {
-            queryBus.execute(GetAllExamsQuery())
+            val response = queryBus.execute(GetAllUsersQuery())
+            LoggerUtils.log(level = LogLevel.INFO, message = "${response}", className = this::class.java)
+            response
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/count")
+    fun getAllUsersCount(): GetAllUserCountDto {
+        return try {
+            queryBus.execute(GetAllUserCountQuery())
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

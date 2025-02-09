@@ -67,6 +67,16 @@ class UserServiceImpl(
         }
     }
 
+    override fun getTotalUserCount(): Int {
+        try {
+            val userCount = userRepository.getUserCount()
+            LoggerUtils.log(level = LogLevel.INFO, message = "userCount: ${userCount}", className = this::class.java )
+            return userCount
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
     override fun modifyUserEmail(email: String, code: String): User {
         return try {
             val user = this.findByCode(code)

@@ -30,7 +30,6 @@ class TestContainerConfig {
             registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl)
             registry.add("spring.datasource.password", mysqlContainer::getPassword)
             registry.add("spring.datasource.username", mysqlContainer::getUsername)
-
         }
     }
 }

@@ -8,4 +8,5 @@ interface UserService {
     fun findAll(): List<User>
     fun modifyUserEmail(email: String, code: String): User
     fun findByEmail(email: String): User
+    fun getTotalUserCount(): Int
 }

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserRepository: JpaRepository<User, Long> {
     fun findByCode(code: String): User
+
     @Query(value = "SELECT EXISTS (SELECT 1 FROM users WHERE users.email = :email AND users.type = :type )",
         nativeQuery = true)
     fun checkIfUserExistsByTypeAndEmail(@Param("type") userType: String, @Param("email") email: String): Int
+
     @Query(value = "SELECT * FROM users WHERE code = :userCode and type = 'STUDENT'",
         nativeQuery = true)
     fun findStudentByUserCode(userCode: String): User
@@ -19,4 +21,7 @@ interface UserRepository: JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE email = :email",
         nativeQuery = true)
     fun findByEmail(@Param("email")email: String) : User
+
+    @Query(value = "SELECT COUNT(*) as user_count FROM users", nativeQuery = true)
+    fun getUserCount(): Int
 }
