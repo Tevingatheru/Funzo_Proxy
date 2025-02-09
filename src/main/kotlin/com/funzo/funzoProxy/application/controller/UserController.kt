@@ -82,7 +82,9 @@ internal class UserController(
     @GetMapping("/count")
     fun getAllUsersCount(): GetAllUserCountDto {
         return try {
-            queryBus.execute(GetAllUserCountQuery())
+            val response = queryBus.execute(GetAllUserCountQuery())
+            LoggerUtils.log(level = LogLevel.INFO, message = "${response}", className = this::class.java)
+            response
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

@@ -69,9 +69,36 @@ class UserServiceImpl(
 
     override fun getTotalUserCount(): Int {
         try {
-            val userCount = userRepository.getUserCount()
+            val userCount: Int = userRepository.getUserCount()
             LoggerUtils.log(level = LogLevel.INFO, message = "userCount: ${userCount}", className = this::class.java )
             return userCount
+        } catch (e: Exception) {
+            LoggerUtils.log(level = LogLevel.WARN, message = "Failed to get user count", className = this::class.java,
+                diagnosisMap = mapOf(Pair("Error message", e.message!!), Pair("localizedMessage", e.localizedMessage))
+            )
+            throw RuntimeException(e)
+        }
+    }
+
+    override fun getTotalAdminCount(): Int {
+        try {
+            return userRepository.getAdminCount()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    override fun getTotalTeacherCount(): Int {
+        try {
+            return userRepository.getTeacherCount()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    override fun getTotalStudentCount(): Int {
+        try {
+            return userRepository.getStudentCount()
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

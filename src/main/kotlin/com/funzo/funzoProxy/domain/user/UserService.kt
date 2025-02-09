@@ -9,4 +9,7 @@ interface UserService {
     fun modifyUserEmail(email: String, code: String): User
     fun findByEmail(email: String): User
     fun getTotalUserCount(): Int
+    fun getTotalAdminCount(): Int
+    fun getTotalTeacherCount(): Int
+    fun getTotalStudentCount(): Int
 }

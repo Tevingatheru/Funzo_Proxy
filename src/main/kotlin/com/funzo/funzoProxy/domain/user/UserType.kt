@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy.domain.user
 
-enum class UserType(val type: String? = null) {
+enum class UserType(val type: String ) {
     ADMINISTRATOR("administrator"),
     STUDENT("student"),
     TEACHER("teacher");
