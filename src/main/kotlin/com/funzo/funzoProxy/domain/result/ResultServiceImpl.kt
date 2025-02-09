@@ -28,7 +28,7 @@ class ResultServiceImpl(
         try {
             var result = Result(
                 exam = examRepository.findByCode(examCode = examCode) ?: throw NotFoundException(),
-                student = userRepository.findStudentByUserCode(userCode) ?: throw NotFoundException(),
+                student = userRepository.findStudentByUserCode(userCode),
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
                 score = score
             )

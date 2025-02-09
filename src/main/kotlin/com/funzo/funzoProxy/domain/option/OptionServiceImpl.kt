@@ -119,8 +119,7 @@ class OptionServiceImpl (
         correctOption: String
     ): Option {
         return try {
-            val option: Option = optionRepository.getByCode(code = code) ?: throw NotFoundException()
-            when (option) {
+            when (val option: Option = optionRepository.getByCode(code = code)) {
                 is MultipleChoiceOption -> {
                     updateStrategy = MultipleChoiceStrategy(option)
                 }

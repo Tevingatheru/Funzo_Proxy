@@ -34,7 +34,7 @@ class ExamServiceImpl(
             val exam = Exam(
                 level = level,
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
-                subject = subjectRepository.findByCode(subjectCode) ?: throw NotFoundException())
+                subject = subjectRepository.findByCode(subjectCode))
             return examRepository.saveAndFlush(exam)
         } catch (e: NotFoundException) {
             throw NotFoundException()
