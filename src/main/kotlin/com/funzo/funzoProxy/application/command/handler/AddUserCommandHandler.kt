@@ -17,7 +17,7 @@ class AddUserCommandHandler(
 
     private fun mapToDto(user: User): AddUserDetailsDto {
         return AddUserDetailsDto(
-            userCode = user.code!!,
+            code = user.code!!,
             email = user.email!!,
             userType = user.type!!.type
         )

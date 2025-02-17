@@ -38,7 +38,7 @@ class AddUserCommandHandlerTest {
     @Test
     fun shouldHandleAddUserDetailsCommand() {
         val user = addUserCommandHandler.handle(addUserDetailsCommand)
-        assertThat(user.userCode).isNotNull()
+        assertThat(user.code).isNotNull()
         verify(userService).save(anyString(), anyString())
     }
 }

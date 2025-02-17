@@ -91,7 +91,7 @@ internal class UserController(
     }
 
     @PutMapping("/edit/email")
-    fun changEmail(@RequestBody request: ChangeUserEmailRequest): GetUserDto {
+    fun changeEmail(@RequestBody request: ChangeUserEmailRequest): GetUserDto {
         return try {
             commandBus.dispatch(ChangeUserEmailCommand(userCode = request.code, email = request.email))
         } catch (e: Exception) {
@@ -100,7 +100,7 @@ internal class UserController(
     }
 
     @GetMapping("/email")
-    fun getUserByCode(@RequestParam("email") email: String): GetUserDto {
+    fun getUserByEmail(@RequestParam("email") email: String): GetUserDto {
         return try {
             LoggerUtils.log(
                 level = LogLevel.INFO,
