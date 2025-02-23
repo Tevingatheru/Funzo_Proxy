@@ -34,7 +34,6 @@ class ExamController(
     fun createExam( @RequestBody request: CreateExamRequest): CreateExamCommandResponse {
         return try {
             val command = CreateExamCommand(
-                request.level,
                 request.subjectCode
             )
 

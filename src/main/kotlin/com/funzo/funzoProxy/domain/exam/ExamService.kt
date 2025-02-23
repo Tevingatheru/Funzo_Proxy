@@ -12,5 +12,5 @@ interface ExamService {
 
     fun findAll(): List<Exam>
 
-    fun save(level: Int, subjectCode: String): Exam
+    fun save( subjectCode: String): Exam
 }

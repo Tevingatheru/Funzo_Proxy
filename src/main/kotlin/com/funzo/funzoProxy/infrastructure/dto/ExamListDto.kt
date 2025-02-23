@@ -8,7 +8,7 @@ data class ExamListDto(var exams: List<ExamDto>? = arrayListOf()) {
         val examDto = ExamDto(
             exam.code,
             exam.subject!!.name!!,
-            exam.level,
+
         )
         this.exams = exams!!.plus(examDto)
     }

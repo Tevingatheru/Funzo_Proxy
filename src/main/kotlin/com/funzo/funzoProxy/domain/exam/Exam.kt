@@ -19,14 +19,11 @@ data class Exam(
     @Column(unique = true, name = "code", nullable = false)
     val code: String? = null,
 
-    @Column
-    val level: Int? = null,
-
     @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL],
         orphanRemoval = true, fetch = FetchType.LAZY)
     val questions: MutableList<Question>? = mutableListOf()
 ) {
-    constructor(level: Int, code: String, subject: Subject)
-            : this(null, subject, code, level,null)
+    constructor(code: String, subject: Subject)
+            : this(null, subject, code, null)
 
 }

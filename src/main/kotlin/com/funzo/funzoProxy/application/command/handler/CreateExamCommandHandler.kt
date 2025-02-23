@@ -16,13 +16,13 @@ class CreateExamCommandHandler(private val examService: ExamService)
 
     override fun handle(command: CreateExamCommand): CreateExamCommandResponse {
 
-        return mapToResponse(examService.save(command.level, command.subjectCode))
+        return mapToResponse(examService.save( command.subjectCode))
     }
 
     private fun mapToResponse(exam: Exam): CreateExamCommandResponse {
         return CreateExamCommandResponse(
             code = exam.code!!,
-            level = exam.level!!,
+
             subject = exam.subject!!.name
         )
     }

@@ -17,7 +17,7 @@ class GetExamByCodeQueryHandler(private val examService: ExamService): QueryHand
         return ExamDto(
             examCode = exam.code,
             subject = exam.subject!!.name,
-            level = exam.level
+
             )
     }
 }

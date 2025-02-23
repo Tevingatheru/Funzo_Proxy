@@ -1,5 +1,6 @@
 package com.funzo.funzoProxy.domain.exam
 
+import com.funzo.funzoProxy.domain.subject.Subject
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
@@ -17,24 +18,21 @@ import java.lang.RuntimeException
 class ExamServiceImpl(
     private val examRepository: ExamRepository,
     private val generateCodeServiceImpl: GenerateCodeServiceImpl,
-    private val subjectRepository: SubjectRepository
-    ) : ExamService  {
+    private val subjectRepository: SubjectRepository,
+) : ExamService  {
 
     override fun findByCode(examCode: String): Exam {
         return examRepository.findByCode(examCode) ?: throw NotFoundException()
     }
 
-    override fun save(level: Int, subjectCode: String): Exam {
+    override fun save(subjectCode: String): Exam {
         try {
-            val existingExams = examRepository.findBySubjectCode(subjectCode)
-            existingExams.forEach{
-                if (level == it.level)
-                    throw RuntimeException("Level Exists")
-            }
+            val subject: Subject = findSubjectByCode(subjectCode)
+
             val exam = Exam(
-                level = level,
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
-                subject = subjectRepository.findByCode(subjectCode))
+                subject = subject
+            )
             return examRepository.saveAndFlush(exam)
         } catch (e: NotFoundException) {
             throw NotFoundException()
@@ -44,6 +42,14 @@ class ExamServiceImpl(
         }  catch (e: Exception) {
             LoggerUtils.log(LogLevel.ERROR, e.localizedMessage!!, this::class.java)
             throw RuntimeException(e)
+        }
+    }
+
+    private fun findSubjectByCode(code: String): Subject {
+        try {
+            return subjectRepository.findByCode(code)
+        } catch (e: Exception) {
+            throw RuntimeException("Could not find subject by code")
         }
     }
 
