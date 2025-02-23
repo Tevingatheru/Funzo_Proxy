@@ -20,6 +20,10 @@ interface UserRepository: JpaRepository<User, Long> {
         nativeQuery = true)
     fun findStudentByUserCode(userCode: String): User
 
+    @Query(value = "SELECT * FROM users WHERE code = :userCode and type = 'TEACHER'",
+        nativeQuery = true)
+    fun findTeacherByUserCode(userCode: String): User
+
     @Query(value = "SELECT * FROM users WHERE email = :email",
         nativeQuery = true)
     fun findByEmail(@Param("email") email: String): User

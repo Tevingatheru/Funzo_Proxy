@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class GetExamByCodeQueryHandler(private val examService: ExamService): QueryHandler<ExamDto, GetExamByCodeQuery> {
     override fun handle(query: GetExamByCodeQuery): ExamDto {
-        val exam = examService.findByCode(query.code)
+        val exam = examService.findByCode(examCode = query.code)
         return mapToResponse(exam)
     }
 

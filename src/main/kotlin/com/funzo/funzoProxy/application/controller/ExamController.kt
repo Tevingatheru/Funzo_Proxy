@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.client.HttpClientErrorException.BadRequest
 import java.lang.RuntimeException
 
 @RestController
@@ -31,10 +32,16 @@ class ExamController(
     private val queryBusImpl: QueryBusImpl
 )  {
     @PostMapping
-    fun createExam( @RequestBody request: CreateExamRequest): CreateExamCommandResponse {
+    fun createExam(@RequestBody request: CreateExamRequest): CreateExamCommandResponse {
         return try {
+            if (request.examDescription.isBlank()) {
+                throw Exception("Bad Request")
+            }
+
             val command = CreateExamCommand(
-                request.subjectCode
+                subjectCode = request.subjectCode,
+                userCode = request.userCode,
+                examDescription = request.examDescription,
             )
 
             commandBusImpl.dispatch(command)

@@ -1,9 +1,11 @@
 package com.funzo.funzoProxy.domain.exam
 
 import com.funzo.funzoProxy.domain.subject.Subject
+import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
+import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
 import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.dao.InvalidDataAccessApiUsageException
@@ -19,19 +21,23 @@ class ExamServiceImpl(
     private val examRepository: ExamRepository,
     private val generateCodeServiceImpl: GenerateCodeServiceImpl,
     private val subjectRepository: SubjectRepository,
+    val userRepository: UserRepository,
 ) : ExamService  {
 
     override fun findByCode(examCode: String): Exam {
         return examRepository.findByCode(examCode) ?: throw NotFoundException()
     }
 
-    override fun save(subjectCode: String): Exam {
+    override fun save(subjectCode: String, userCode: String, examDescription: String): Exam {
         try {
             val subject: Subject = findSubjectByCode(subjectCode)
+            val user: User = findTeacherByUserCoder(userCode = userCode)
 
             val exam = Exam(
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
-                subject = subject
+                subject = subject,
+                userCode = user,
+                description = examDescription
             )
             return examRepository.saveAndFlush(exam)
         } catch (e: NotFoundException) {
@@ -42,6 +48,14 @@ class ExamServiceImpl(
         }  catch (e: Exception) {
             LoggerUtils.log(LogLevel.ERROR, e.localizedMessage!!, this::class.java)
             throw RuntimeException(e)
+        }
+    }
+
+    private fun findTeacherByUserCoder(userCode: String): User {
+        try {
+            return userRepository.findTeacherByUserCode(userCode = userCode)
+        } catch (e: Exception) {
+            throw RuntimeException("Could not find teacher by code.")
         }
     }
 
