@@ -119,6 +119,28 @@ class UserServiceImpl(
         }
     }
 
+    override fun findTeacherByCode(code: String): User {
+        return try {
+            val user: User = userRepository.findByCode(code)
+            if (user.isTeacher()) {
+                LoggerUtils.log(
+                    level = LogLevel.INFO,
+                    message = "Fetching teacher",
+                    className = this::class.java,
+                    diagnosisMap = mapOf(Pair("user", user))
+                )
+                user
+            } else {
+                throw Exception()
+            }
+        } catch (e: EmptyResultDataAccessException) {
+            throw NotFoundException()
+        } catch (e: Exception) {
+            LoggerUtils.log(LogLevel.ERROR, e.localizedMessage, mapOf(Pair("code", code)), this::class.java)
+            throw RuntimeException("Unable to find user by code")
+        }
+    }
+
     private fun saveUser(user: User) = userRepository.saveAndFlush(user)
 
     private fun noDuplicate(userType: String, email: String) =

@@ -4,7 +4,6 @@ import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.domain.subject.Subject
 import com.funzo.funzoProxy.domain.user.User
 import jakarta.persistence.*
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 
 @Entity
 @Table(name = "exams")
@@ -14,12 +13,12 @@ data class Exam(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_code", referencedColumnName = "code")
+    @JoinColumn(name = "subject_code", referencedColumnName = "code", nullable = false)
     var subject: Subject? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_code", referencedColumnName = "code", nullable = false)
-    val userCode: User,
+    val user: User? = null,
 
     @Column(unique = true, name = "code", nullable = false)
     val code: String? = null,
@@ -29,9 +28,9 @@ data class Exam(
     val questions: MutableList<Question>? = mutableListOf(),
 
     @Column(name= "description", nullable = false)
-    val description: String
+    val description: String? = null,
 ) {
-    constructor(code: String, subject: Subject, userCode: User, description: String)
-            : this(id = null, subject = subject,code = code, userCode = userCode, description = description)
+    constructor(code: String, subject: Subject, user: User, description: String)
+            : this(id = null, subject = subject,code = code, user = user, description = description)
 
 }

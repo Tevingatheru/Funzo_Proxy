@@ -21,7 +21,7 @@ class ExamServiceImpl(
     private val examRepository: ExamRepository,
     private val generateCodeServiceImpl: GenerateCodeServiceImpl,
     private val subjectRepository: SubjectRepository,
-    val userRepository: UserRepository,
+    private val userRepository: UserRepository,
 ) : ExamService  {
 
     override fun findByCode(examCode: String): Exam {
@@ -36,7 +36,7 @@ class ExamServiceImpl(
             val exam = Exam(
                 code = generateCodeServiceImpl.generateCodeWithLength(7),
                 subject = subject,
-                userCode = user,
+                user = user,
                 description = examDescription
             )
             return examRepository.saveAndFlush(exam)
@@ -88,6 +88,20 @@ class ExamServiceImpl(
     override fun findAll(): List<Exam> {
         try {
             return examRepository.findAll()
+        } catch (e: Exception) {
+            throw RuntimeException(e.localizedMessage)
+        }
+    }
+
+    override fun findTeachersExamList(teacherCode: String): List<Exam> {
+        try {
+            LoggerUtils.log(
+                level = LogLevel.INFO,
+                message = "Fetching all exam owned by given teacher.",
+                className = this::class.java,
+                diagnosisMap = mapOf(Pair("userCode", teacherCode))
+            )
+            return examRepository.findByUserCode(userCode = teacherCode)
         } catch (e: Exception) {
             throw RuntimeException(e.localizedMessage)
         }

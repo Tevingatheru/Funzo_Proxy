@@ -1,5 +1,6 @@
 package com.funzo.funzoProxy.application.command.handler
 
+import com.funzo.funzoProxy.application.mapper.ExamMapper
 import com.funzo.funzoProxy.application.query.GetExamListBySubjectCodeQuery
 import com.funzo.funzoProxy.application.query.handler.QueryHandler
 import com.funzo.funzoProxy.domain.exam.Exam
@@ -12,15 +13,6 @@ class GetExamListBySubjectCodeQueryHandler(private val examService: ExamService)
     : QueryHandler<ExamListDto, GetExamListBySubjectCodeQuery>
 {
     override fun handle(query: GetExamListBySubjectCodeQuery): ExamListDto {
-        return mapToExamListResponse(examService.findExamsBySubjectCode(query.subjectCode))
-    }
-
-    private fun mapToExamListResponse(examList: List<Exam>): ExamListDto {
-        val examListDto = ExamListDto()
-        for (exam: Exam in examList) {
-            examListDto.add(exam)
-        }
-
-        return examListDto
+        return ExamMapper.mapToExamListResponse(examService.findExamsBySubjectCode(query.subjectCode))
     }
 }

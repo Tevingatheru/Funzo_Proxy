@@ -5,10 +5,8 @@ import com.funzo.funzoProxy.application.command.DeleteExamCommand
 import com.funzo.funzoProxy.application.controller.request.CreateExamRequest
 import com.funzo.funzoProxy.application.command.bus.CommandBusImpl
 import com.funzo.funzoProxy.application.controller.response.CreateExamCommandResponse
+import com.funzo.funzoProxy.application.query.*
 import com.funzo.funzoProxy.infrastructure.dto.ExamListDto
-import com.funzo.funzoProxy.application.query.GetExamByCodeQuery
-import com.funzo.funzoProxy.application.query.GetExamListBySubjectCodeQuery
-import com.funzo.funzoProxy.application.query.GetExamListQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBusImpl
 import com.funzo.funzoProxy.infrastructure.dto.ExamDto
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.HttpClientErrorException.BadRequest
 import java.lang.RuntimeException
 
 @RestController
@@ -77,7 +74,7 @@ class ExamController(
         }
     }
 
-    @GetMapping("subject")
+    @GetMapping("/subject")
     fun getSubjectExamList(@RequestParam subjectCode: String): ExamListDto {
         return try {
             LoggerUtils.log(
@@ -85,7 +82,7 @@ class ExamController(
                 message = "Fetching exams by subject code: $subjectCode",
                 className = this::class.java
             )
-            val query = GetExamListBySubjectCodeQuery(
+            val query: GetExamListBySubjectCodeQuery = GetExamListBySubjectCodeQuery(
                 subjectCode = subjectCode
             )
 
@@ -96,14 +93,34 @@ class ExamController(
     }
 
     @GetMapping()
-    fun getAllSubjects(): ExamListDto {
+    fun getAllExams(): ExamListDto {
         return try {
             LoggerUtils.log(
                 level = LogLevel.INFO,
                 message = "Fetching all exams.",
                 className = this::class.java
             )
-            val query = GetExamListQuery()
+
+            val query : GetExamListQuery = GetExamListQuery()
+
+            queryBusImpl.execute(query)
+        } catch (e: Exception) {
+            LoggerUtils.log(LogLevel.ERROR, e.localizedMessage, this::class.java)
+            throw RuntimeException(e.localizedMessage)
+        }
+    }
+
+    @GetMapping("/teacher")
+    fun getAllTeachersExams(@RequestParam(value = "userCode") userCode: String): ExamListDto {
+        return try {
+            LoggerUtils.log(
+                level = LogLevel.INFO,
+                message = "Fetching all teachers exams.",
+                className = this::class.java
+            )
+            val query : GetTeachersExamListQuery = GetTeachersExamListQuery(
+                userCode = userCode
+            )
 
             queryBusImpl.execute(query)
         } catch (e: Exception) {

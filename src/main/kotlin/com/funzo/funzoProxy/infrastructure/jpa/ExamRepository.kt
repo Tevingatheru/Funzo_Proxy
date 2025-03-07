@@ -10,4 +10,6 @@ interface ExamRepository: JpaRepository<Exam, Long> {
     fun deleteByCode(examCode: String)
 
     fun findBySubjectCode(subjectCode: String): List<Exam>
+
+    fun findByUserCode(userCode: String): List<Exam>
 }

@@ -20,6 +20,14 @@ data class User(
     var email: String? = null
 
 ) {
+    fun exists(): Boolean {
+        return this.id != null
+    }
+
+    fun isTeacher(): Boolean {
+        return this.type!!.isOfType(expectedUserType = UserType.TEACHER)
+    }
+
     constructor(code: String, userType: UserType, email: String) : this(
         null, code = code, type = userType, email = email
     )

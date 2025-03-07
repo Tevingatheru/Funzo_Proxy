@@ -12,4 +12,5 @@ interface UserService {
     fun getTotalAdminCount(): Int
     fun getTotalTeacherCount(): Int
     fun getTotalStudentCount(): Int
+    fun findTeacherByCode(code: String): User
 }

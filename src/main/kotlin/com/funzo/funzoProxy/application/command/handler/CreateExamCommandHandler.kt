@@ -25,9 +25,9 @@ class CreateExamCommandHandler(private val examService: ExamService)
     private fun mapToResponse(exam: Exam): CreateExamCommandResponse {
         return CreateExamCommandResponse(
             code = exam.code!!,
-            userCode = exam.userCode.code!!,
+            userCode = exam.user!!.code!!,
             subject = exam.subject!!.name!!,
-            description = exam.description
+            description = exam.description!!
         )
     }
 }
