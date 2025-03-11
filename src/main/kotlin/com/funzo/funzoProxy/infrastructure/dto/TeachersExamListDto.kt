@@ -2,13 +2,14 @@ package com.funzo.funzoProxy.infrastructure.dto
 
 import com.funzo.funzoProxy.domain.exam.Exam
 
-data class ExamListDto(var exams: List<ExamDto>? = arrayListOf()) {
+data class TeachersExamListDto(var exams: List<TeacherExamDto>? = arrayListOf()) {
 
     fun add(exam: Exam) {
-        val examDto = ExamDto(
+        val examDto = TeacherExamDto(
             examCode = exam.code,
             subject = exam.subject!!.name!!,
-        )
+            description= exam.description
+            )
         this.exams = exams!!.plus(examDto)
     }
 }

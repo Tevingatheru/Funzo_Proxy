@@ -9,6 +9,7 @@ import com.funzo.funzoProxy.application.query.*
 import com.funzo.funzoProxy.infrastructure.dto.ExamListDto
 import com.funzo.funzoProxy.application.query.bus.QueryBusImpl
 import com.funzo.funzoProxy.infrastructure.dto.ExamDto
+import com.funzo.funzoProxy.infrastructure.dto.TeachersExamListDto
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
 import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
@@ -111,7 +112,7 @@ class ExamController(
     }
 
     @GetMapping("/teacher")
-    fun getAllTeachersExams(@RequestParam(value = "userCode") userCode: String): ExamListDto {
+    fun getAllTeachersExams(@RequestParam(value = "userCode") userCode: String): TeachersExamListDto {
         return try {
             LoggerUtils.log(
                 level = LogLevel.INFO,
