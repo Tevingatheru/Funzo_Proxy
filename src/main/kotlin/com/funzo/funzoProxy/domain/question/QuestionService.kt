@@ -1,7 +1,5 @@
 package com.funzo.funzoProxy.domain.question
 
-import com.funzo.funzoProxy.infrastructure.dto.AddQuestionDto
-
 interface QuestionService {
     fun addQuestion(
         examCode: String,

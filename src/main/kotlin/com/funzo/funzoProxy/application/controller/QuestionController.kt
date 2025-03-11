@@ -40,7 +40,6 @@ class QuestionController (
             )
             return commandBus.dispatch(addQuestionCommand)
         } catch (e: Exception) {
-//            LoggerUtils.log(level = LogLevel.ERROR, message = "Unable to add question", className = this::class.java)
             throw RuntimeException(e)
         }
     }
