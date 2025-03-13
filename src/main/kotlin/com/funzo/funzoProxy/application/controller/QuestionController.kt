@@ -10,11 +10,7 @@ import com.funzo.funzoProxy.application.query.QuestionsByExamCodeQuery
 import com.funzo.funzoProxy.application.query.GetAllQuestionsQuery
 import com.funzo.funzoProxy.application.query.GetQuestionByCodeQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBus
-import com.funzo.funzoProxy.infrastructure.dto.EditQuestionDto
-import com.funzo.funzoProxy.infrastructure.dto.AddQuestionDto
-import com.funzo.funzoProxy.infrastructure.dto.ExamQuestionsDto
-import com.funzo.funzoProxy.infrastructure.dto.QuestionDto
-import com.funzo.funzoProxy.infrastructure.dto.QuestionListDto
+import com.funzo.funzoProxy.infrastructure.dto.*
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -45,7 +41,7 @@ class QuestionController (
     }
 
     @DeleteMapping("/delete")
-    fun removeQuestion(@RequestParam(value = "code") questionCode: String): String
+    fun removeQuestion(@RequestParam(value = "code") questionCode: String): DeleteQuestionDto
     {
         try {
             val removeQuestionCommand = RemoveQuestionCommand(
@@ -53,7 +49,7 @@ class QuestionController (
             )
 
             commandBus.dispatch(removeQuestionCommand)
-            return "Deleted"
+            return DeleteQuestionDto(message = "Deleted")
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
