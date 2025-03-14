@@ -14,7 +14,7 @@ interface OptionService {
 
     fun getByCode(code: String) : Option
 
-    fun getByQuestionCode(questionCode: String): List<Option>
+    fun getByQuestionCode(questionCode: String): Option
 
     fun modifyOption(
         code: String,

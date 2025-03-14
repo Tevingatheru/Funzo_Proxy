@@ -62,7 +62,7 @@ class OptionController(
     }
 
     @GetMapping("/question/code")
-    fun getOptionsByQuestionCode(@RequestParam("questionCode") questionCode: String): OptionListDto {
+    fun getOptionsByQuestionCode(@RequestParam("questionCode") questionCode: String): OptionDto {
         return try {
             queryBus.execute(GetQuestionOptionsQuery(questionCode = questionCode))
         } catch (e: Exception) {

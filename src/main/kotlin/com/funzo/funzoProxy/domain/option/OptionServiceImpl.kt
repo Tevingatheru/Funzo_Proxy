@@ -41,8 +41,7 @@ class OptionServiceImpl (
         questionCode: String
     ): Option {
         return try {
-            optionFactory = if (optionA == null && optionB == null && optionC == null &&
-                optionD == null) {
+            optionFactory = if (isTrueFalseOption(optionA, optionB, optionC, optionD)) {
                 TrueOrFalseOptionFactory()
             } else {
                 MultipleChoiceOptionFactory()
@@ -64,6 +63,14 @@ class OptionServiceImpl (
             throw RuntimeException("Unable to create an option.", e)
         }
     }
+
+    private fun isTrueFalseOption(
+        optionA: String?,
+        optionB: String?,
+        optionC: String?,
+        optionD: String?
+    ) = optionA == null && optionB == null && optionC == null &&
+            optionD == null
 
     override fun deleteByCode(code: String) {
         try {
@@ -102,9 +109,9 @@ class OptionServiceImpl (
         }
     }
 
-    override fun getByQuestionCode(questionCode: String): List<Option> {
+    override fun getByQuestionCode(questionCode: String): Option {
         return try {
-            optionRepository.getByQuestionCode(questionCode = questionCode)
+            optionRepository.getByQuestionCode(questionCode = questionCode).first()
         } catch (e: Exception) {
             throw RuntimeException("Unable to get option by question code. questionCode: $questionCode", e)
         }
