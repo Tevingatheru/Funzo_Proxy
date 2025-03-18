@@ -137,7 +137,11 @@ class OptionServiceImpl (
 
             optionRepository.saveAndFlush(updateStrategy!!.execute(
                 OptionUpdateOperation(
-                    correctOption = correctOption
+                    correctOption = correctOption,
+                    optionA = optionA!!,
+                    optionB = optionB!!,
+                    optionC = optionC!!,
+                    optionD = optionD!!,
                 )
             ))
         } catch (e: Exception) {
