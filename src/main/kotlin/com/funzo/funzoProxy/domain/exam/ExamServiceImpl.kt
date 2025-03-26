@@ -3,6 +3,7 @@ package com.funzo.funzoProxy.domain.exam
 import com.funzo.funzoProxy.domain.subject.Subject
 import com.funzo.funzoProxy.domain.user.User
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.ExamContentDto
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
@@ -105,5 +106,16 @@ class ExamServiceImpl(
         } catch (e: Exception) {
             throw RuntimeException(e.localizedMessage)
         }
+    }
+
+    override fun getExamContentByCode(examCode: String): ExamContentDto {
+        val exam :Exam= this.findByCode(examCode = examCode)
+        val examContentDto = ExamContentDto()
+        examContentDto.setCode(code = exam.code!!)
+        val examQuestions = exam.questions!!
+        examContentDto.setTotalNumberOfQuestions(examQuestions = examQuestions)
+        examContentDto.setQuestions(examQuestions = examQuestions)
+        examContentDto.setOptions()
+        return examContentDto
     }
 }

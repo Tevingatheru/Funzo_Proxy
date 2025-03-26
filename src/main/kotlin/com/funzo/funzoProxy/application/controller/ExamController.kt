@@ -8,6 +8,7 @@ import com.funzo.funzoProxy.application.controller.response.CreateExamCommandRes
 import com.funzo.funzoProxy.application.query.*
 import com.funzo.funzoProxy.infrastructure.dto.ExamListDto
 import com.funzo.funzoProxy.application.query.bus.QueryBusImpl
+import com.funzo.funzoProxy.infrastructure.dto.ExamContentDto
 import com.funzo.funzoProxy.infrastructure.dto.ExamDto
 import com.funzo.funzoProxy.infrastructure.dto.TeachersExamListDto
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
@@ -129,4 +130,27 @@ class ExamController(
             throw RuntimeException(e.localizedMessage)
         }
     }
+
+
+    @GetMapping("/content")
+    fun getExamContentByCode(@RequestParam(value = "code") code: String): ExamContentDto {
+        return try {
+            LoggerUtils.log(
+                level = LogLevel.INFO,
+                message = "Fetching all exam content by code.",
+                className = this::class.java,
+                diagnosisMap = mapOf(Pair("examCode", code))
+            )
+
+            val query : GetExamContentQuery = GetExamContentQuery(
+                examCode = code
+            )
+
+            queryBusImpl.execute(query)
+        } catch (e: Exception) {
+            LoggerUtils.log(LogLevel.ERROR, e.localizedMessage, this::class.java)
+            throw RuntimeException(e.localizedMessage)
+        }
+    }
 }
+
