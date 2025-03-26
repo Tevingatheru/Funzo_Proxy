@@ -112,6 +112,8 @@ class OptionServiceImpl (
     override fun getByQuestionCode(questionCode: String): Option {
         return try {
             optionRepository.getByQuestionCode(questionCode = questionCode).first()
+        } catch (e: NoSuchElementException) {
+            throw NotFoundException()
         } catch (e: Exception) {
             throw RuntimeException("Unable to get option by question code. questionCode: $questionCode", e)
         }
