@@ -21,7 +21,7 @@ object QuestionDtoMapper {
             code = question.code,
             text = question.question,
             questionType = question.option.toString(),
-            examCode = question.exam!!.code
+            examCode = question.exam!!.code,
         )
     }
 

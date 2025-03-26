@@ -1,5 +1,6 @@
 package com.funzo.funzoProxy.domain.exam
 
+import com.funzo.funzoProxy.domain.option.OptionService
 import com.funzo.funzoProxy.infrastructure.dto.ExamContentDto
 import org.springframework.stereotype.Service
 
@@ -17,5 +18,5 @@ interface ExamService {
 
     fun findTeachersExamList(teacherCode: String): List<Exam>
 
-    fun getExamContentByCode(examCode: String): ExamContentDto
+    fun getExamContentByCode(examCode: String, optionServiceImpl: OptionService): ExamContentDto
 }

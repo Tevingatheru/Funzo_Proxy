@@ -15,6 +15,7 @@ import com.funzo.funzoProxy.infrastructure.util.LogLevel
 import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -111,6 +112,8 @@ class OptionServiceImpl (
     override fun getByQuestionCode(questionCode: String): Option {
         return try {
             optionRepository.getByQuestionCode(questionCode = questionCode).first()
+        } catch (e: NoSuchElementException) {
+            throw NotFoundException()
         } catch (e: Exception) {
             throw RuntimeException("Unable to get option by question code. questionCode: $questionCode", e)
         }
