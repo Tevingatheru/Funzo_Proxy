@@ -1,5 +1,7 @@
 package com.funzo.funzoProxy.domain.result
 
+import com.funzo.funzoProxy.infrastructure.dto.GetStudentStatsDto
+
 interface ResultService {
     fun createResult(examCode: String, userCode: String, score: Double): Result
 
@@ -12,4 +14,6 @@ interface ResultService {
     fun findResultsByExamCodeAndUserCode(examCode: String, userCode: String) : List<Result>
 
     fun deleteByCode(code: String)
+
+    fun getStudentStatsByCode(userCode: String): GetStudentStatsDto
 }

@@ -20,4 +20,10 @@ interface ResultRepository: JpaRepository<Result, Long> {
     @Query(value = "SELECT * FROM results WHERE student_code = :userCode",
         nativeQuery = true)
     fun findByUserCode(@Param(value = "userCode") userCode: String): List<Result>
+
+
+//    @Query("SELECT exam.code, AVG(r.score) FROM Result r JOIN r.exam e GROUP BY e.code")
+//    fun findAverageScoresByExam(): List<AverageScoreProjection>
 }
+
+

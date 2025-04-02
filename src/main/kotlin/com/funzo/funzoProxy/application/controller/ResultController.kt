@@ -4,10 +4,8 @@ import com.funzo.funzoProxy.application.command.CreateResultCommand
 import com.funzo.funzoProxy.application.command.DeleteResultByCodeCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateResultRequest
-import com.funzo.funzoProxy.application.query.FetchResultsByExamCodeAndUserCodeQuery
-import com.funzo.funzoProxy.application.query.FetchUserByCodeQuery
-import com.funzo.funzoProxy.application.query.FindAllResultsQuery
-import com.funzo.funzoProxy.application.query.FindResultsByUserCodeQuery
+import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByStudentCodeResponse
+import com.funzo.funzoProxy.application.query.*
 import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.*
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
@@ -81,6 +79,15 @@ class ResultController(
     fun deleteByCode(@PathVariable code: String) {
         try {
             commandBus.dispatch(DeleteResultByCodeCommand(code = code))
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/student/stats/{studentCode}")
+    fun getStudentStats(@PathVariable(value = "studentCode") studentCode: String): GetResultsStatsByStudentCodeResponse {
+        try {
+            return queryBus.execute(GetResultsStatsByStudentCodeQuery(studentCode = studentCode))
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

@@ -13,17 +13,17 @@ data class Question(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code", nullable = true)
-    val exam: Exam? = null,
+    var exam: Exam? = null,
 
     @Column(unique = true, name = "code", nullable = false)
-    val code: String? = null,
+    var code: String? = null,
 
     @Column(name = "question")
     var question: String? = null,
 
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], mappedBy = "question")
     @JoinColumn(name = "option_code", referencedColumnName = "code")
-    val option: Option? = null,
+    var option: Option? = null,
 
     @Column(name = "image")
     var image: String? = null

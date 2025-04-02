@@ -13,11 +13,11 @@ data class Result(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "exam_code", referencedColumnName = "code")
-    val exam: Exam? = null,
+    var exam: Exam? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_code", referencedColumnName = "code")
-    val student: User? = null,
+    var student: User? = null,
 
     @Column(unique = true)
     val code: String? = null,

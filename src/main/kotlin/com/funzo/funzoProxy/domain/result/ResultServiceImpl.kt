@@ -1,6 +1,7 @@
 package com.funzo.funzoProxy.domain.result
 
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.GetStudentStatsDto
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
@@ -11,6 +12,8 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
+private const val TAG : String = "ResultServiceImpl"
 
 @Service
 @Transactional
@@ -80,11 +83,45 @@ class ResultServiceImpl(
     }
 
     override fun deleteByCode(code: String) {
-        try{
+        try {
             resultRepository.deleteByCode(code = code)
         } catch (e: Exception) {
             throw RuntimeException("Unable to delete result with code: $code", e)
         }
+    }
+
+    override fun getStudentStatsByCode(userCode: String): GetStudentStatsDto {
+        val resultList: List<Result> = resultRepository.findByUserCode(userCode = userCode)
+        val mapExamToResult: MutableList<Pair<String, Double>> = mutableListOf()
+        var total : Double = 0.0
+
+        val resultsGroupingByExam = resultList.groupingBy { it.exam!!.description }
+
+//        val resultsGroupedByExamMap = resultList.map { it.exam!!.description to it.score }
+        val resultsGroupedByExam = resultList.groupBy {it.exam!!.description   }
+        val attemptsCount = resultsGroupingByExam.eachCount()
+
+
+
+        LoggerUtils.log(
+            LogLevel.INFO,
+            message = "getStudentStatsByCode",
+            className = this::class.java,
+            diagnosisMap = mapOf(
+//                Pair("attemptsCount",attemptsCount),
+//                Pair("resultsGroupedByExam", resultsGroupedByExam),
+//                Pair("resultsGroupedByExamMap", resultsGroupedByExamMap),
+//                Pair("resultsGroupingByExam", resultsGroupingByExam),
+            )
+        )
+        val totalAverage : Double = 0.0
+
+        val getStudentStatsDto: GetStudentStatsDto = GetStudentStatsDto(
+            examResultMap = mapExamToResult,
+            overallAverage = totalAverage
+        )
+
+        return getStudentStatsDto
     }
 
     private fun attemptNoIncrement(
