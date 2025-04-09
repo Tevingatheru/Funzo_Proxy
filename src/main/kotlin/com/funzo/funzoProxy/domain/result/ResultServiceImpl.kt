@@ -1,7 +1,8 @@
 package com.funzo.funzoProxy.domain.result
 
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
-import com.funzo.funzoProxy.infrastructure.dto.GetStudentStatsDto
+import com.funzo.funzoProxy.infrastructure.dto.GetStatsDto
+import com.funzo.funzoProxy.infrastructure.jpa.AverageScoreProjection
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
@@ -90,7 +91,7 @@ class ResultServiceImpl(
         }
     }
 
-    override fun getStudentStatsByCode(userCode: String): GetStudentStatsDto {
+    override fun getStudentStatsByCode(userCode: String): GetStatsDto {
         val mapExamToResult: MutableList<Pair<String, Double>> = mutableListOf()
 
         val averageScoresByExam = resultRepository.findAverageScoresByExam(studentCode = userCode)
@@ -105,20 +106,43 @@ class ResultServiceImpl(
             )
         )
 
-        averageScoresByExam.forEach {
-            mapExamToResult.add(Pair(it.examName!!, it.averageScore!!))
-        }
+        mapAverageScoreProjectionToDto(averageScoresByExam, mapExamToResult)
 
         val totalNumberOfAttemptedExams : Int = averageScoresByExam.size
         val totalAverageOfAttemptedExams  = averageScoresByExam.sumOf { it.averageScore!! }
         val totalAverage : Double = totalAverageOfAttemptedExams / totalNumberOfAttemptedExams
 
-        val getStudentStatsDto: GetStudentStatsDto = GetStudentStatsDto(
+        val getStatsDto: GetStatsDto = GetStatsDto(
             examResultMap = mapExamToResult,
             overallAverage = totalAverage
         )
 
-        return getStudentStatsDto
+        return getStatsDto
+    }
+
+    override fun getTeacherStatsByUserCode(userCode: String): GetStatsDto {
+        val teacherResults = resultRepository.findAverageExamPerformanceByTeacherCode(teacherCode = userCode)
+        var examResultMap: MutableList<Pair<String, Double>> = mutableListOf()
+
+        val totalNumberOfAttemptedExams : Int = teacherResults.size
+        val totalAverageOfAttemptedExams  = teacherResults.sumOf { it.averageScore!! }
+        val totalAverage : Double = totalAverageOfAttemptedExams / totalNumberOfAttemptedExams
+
+        mapAverageScoreProjectionToDto(teacherResults, examResultMap)
+
+        return GetStatsDto(
+            examResultMap = examResultMap,
+            overallAverage = totalAverage
+        )
+    }
+
+    private fun mapAverageScoreProjectionToDto(
+        teacherResults: List<AverageScoreProjection>,
+        examResultMap: MutableList<Pair<String, Double>>
+    ) {
+        teacherResults.forEach {
+            examResultMap.add(Pair(it.examName!!, it.averageScore!!))
+        }
     }
 
     private fun attemptNoIncrement(

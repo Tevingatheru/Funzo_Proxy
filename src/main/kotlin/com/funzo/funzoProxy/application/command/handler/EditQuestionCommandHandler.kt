@@ -1,7 +1,7 @@
 package com.funzo.funzoProxy.application.command.handler
 
 import com.funzo.funzoProxy.application.command.EditQuestionCommand
-import com.funzo.funzoProxy.application.mapper.QuestionDtoMapper
+import com.funzo.funzoProxy.application.mapper.QuestionMapper
 import com.funzo.funzoProxy.infrastructure.dto.EditQuestionDto
 import com.funzo.funzoProxy.domain.question.QuestionService
 import org.springframework.stereotype.Component
@@ -12,7 +12,7 @@ class EditQuestionCommandHandler(private val questionService: QuestionService)
 {
 
     override fun handle(command: EditQuestionCommand): EditQuestionDto {
-        return QuestionDtoMapper.mapToEditQuestionResponse(questionService.modifyQuestion(
+        return QuestionMapper.mapToEditQuestionResponse(questionService.modifyQuestion(
             examCode = command.examCode,
             questionCode = command.questionCode,
             questionText = command.question,

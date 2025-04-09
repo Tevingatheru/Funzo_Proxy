@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy.domain.result
 
-import com.funzo.funzoProxy.infrastructure.dto.GetStudentStatsDto
+import com.funzo.funzoProxy.infrastructure.dto.GetStatsDto
 
 interface ResultService {
     fun createResult(examCode: String, userCode: String, score: Double): Result
@@ -15,5 +15,7 @@ interface ResultService {
 
     fun deleteByCode(code: String)
 
-    fun getStudentStatsByCode(userCode: String): GetStudentStatsDto
+    fun getStudentStatsByCode(userCode: String): GetStatsDto
+
+    fun getTeacherStatsByUserCode(userCode: String): GetStatsDto
 }

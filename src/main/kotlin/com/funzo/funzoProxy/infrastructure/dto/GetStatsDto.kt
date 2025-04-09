@@ -1,6 +1,6 @@
 package com.funzo.funzoProxy.infrastructure.dto
 
-data class GetStudentStatsDto(
+data class GetStatsDto(
     var examResultMap: MutableList<Pair<String, Double>>,
     var overallAverage: Double
 ) {}

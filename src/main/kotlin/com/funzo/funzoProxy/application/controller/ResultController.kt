@@ -5,6 +5,7 @@ import com.funzo.funzoProxy.application.command.DeleteResultByCodeCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateResultRequest
 import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByStudentCodeResponse
+import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByTeacherCodeResponse
 import com.funzo.funzoProxy.application.query.*
 import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.*
@@ -87,7 +88,17 @@ class ResultController(
     @GetMapping("/student/stats/")
     fun getStudentStats(@RequestParam(value = "studentCode") studentCode: String): GetResultsStatsByStudentCodeResponse {
         try {
-            val response = queryBus.execute(GetResultsStatsByStudentCodeQuery(studentCode = studentCode))
+            val response : GetResultsStatsByStudentCodeResponse = queryBus.execute(GetResultsStatsByStudentCodeQuery(studentCode = studentCode))
+            return response
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/teacher/stats/")
+    fun getTeacherStats(@RequestParam(value = "teacherCode") teacherCode: String): GetResultsStatsByTeacherCodeResponse {
+        try {
+            val response: GetResultsStatsByTeacherCodeResponse = queryBus.execute(GetResultsStatsByTeacherCodeQuery(teacherCode = teacherCode))
             return response
         } catch (e: Exception) {
             throw RuntimeException(e)
