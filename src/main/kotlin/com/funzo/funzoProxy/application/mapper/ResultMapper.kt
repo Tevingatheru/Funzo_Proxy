@@ -53,7 +53,7 @@ object ResultMapper {
     }
 
 
-    private fun mapExamAverageResponsesToList(examResultMap: MutableList<Pair<String, Double>>): MutableList<ExamAverageResponse> {
+    fun mapExamAverageResponsesToList(examResultMap: MutableList<Pair<String, Double>>): MutableList<ExamAverageResponse> {
         val examAveragesList: MutableList<ExamAverageResponse> = mutableListOf()
         examResultMap.forEach {
             val examAverageResponse: ExamAverageResponse = ExamAverageResponse(

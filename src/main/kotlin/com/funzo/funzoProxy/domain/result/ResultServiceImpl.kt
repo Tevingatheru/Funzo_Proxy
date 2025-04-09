@@ -1,6 +1,8 @@
 package com.funzo.funzoProxy.domain.result
 
+import com.funzo.funzoProxy.domain.user.UserType
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.AllExamStatsDto
 import com.funzo.funzoProxy.infrastructure.dto.GetStatsDto
 import com.funzo.funzoProxy.infrastructure.jpa.AverageScoreProjection
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
@@ -134,6 +136,19 @@ class ResultServiceImpl(
             examResultMap = examResultMap,
             overallAverage = totalAverage
         )
+    }
+
+    override fun getAllExamStats(userCode: String): AllExamStatsDto {
+        if (userRepository.findByCode(userCode).type == UserType.ADMINISTRATOR) {
+            val response: List<AverageScoreProjection> = resultRepository.getAllExamsAveragePerformance()
+
+            val examMap: MutableList<Pair<String, Double>> = mutableListOf()
+            mapAverageScoreProjectionToDto(response, examMap)
+            val allExamStatsDto = AllExamStatsDto(examResultMap = examMap)
+            return allExamStatsDto
+        } else {
+            throw IllegalArgumentException("User is not an administrator.")
+        }
     }
 
     private fun mapAverageScoreProjectionToDto(

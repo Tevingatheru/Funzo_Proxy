@@ -47,6 +47,17 @@ interface ResultRepository: JpaRepository<Result, Long> {
         GROUP BY e.code, e.description
     """, nativeQuery = true)
     fun findAverageExamPerformanceByTeacherCode(@Param("teacherCode") teacherCode: String): List<AverageScoreProjection>
+
+
+    @Query(
+        """
+        SELECT 
+            e.code AS examCode,
+            e.description AS examName,
+            AVG(r.score) AS averageScore
+        FROM results r
+        JOIN exams e on r.exam_code = e.code        
+        GROUP BY e.code
+    """, nativeQuery = true)
+    fun getAllExamsAveragePerformance(): List<AverageScoreProjection>
 }
-
-
