@@ -84,10 +84,11 @@ class ResultController(
         }
     }
 
-    @GetMapping("/student/stats/{studentCode}")
-    fun getStudentStats(@PathVariable(value = "studentCode") studentCode: String): GetResultsStatsByStudentCodeResponse {
+    @GetMapping("/student/stats/")
+    fun getStudentStats(@RequestParam(value = "studentCode") studentCode: String): GetResultsStatsByStudentCodeResponse {
         try {
-            return queryBus.execute(GetResultsStatsByStudentCodeQuery(studentCode = studentCode))
+            val response = queryBus.execute(GetResultsStatsByStudentCodeQuery(studentCode = studentCode))
+            return response
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

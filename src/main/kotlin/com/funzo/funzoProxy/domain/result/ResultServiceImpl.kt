@@ -91,30 +91,27 @@ class ResultServiceImpl(
     }
 
     override fun getStudentStatsByCode(userCode: String): GetStudentStatsDto {
-        val resultList: List<Result> = resultRepository.findByUserCode(userCode = userCode)
         val mapExamToResult: MutableList<Pair<String, Double>> = mutableListOf()
-        var total : Double = 0.0
 
-        val resultsGroupingByExam = resultList.groupingBy { it.exam!!.description }
-
-//        val resultsGroupedByExamMap = resultList.map { it.exam!!.description to it.score }
-        val resultsGroupedByExam = resultList.groupBy {it.exam!!.description   }
-        val attemptsCount = resultsGroupingByExam.eachCount()
-
-
-
+        val averageScoresByExam = resultRepository.findAverageScoresByExam(studentCode = userCode)
         LoggerUtils.log(
             LogLevel.INFO,
             message = "getStudentStatsByCode",
             className = this::class.java,
             diagnosisMap = mapOf(
-//                Pair("attemptsCount",attemptsCount),
-//                Pair("resultsGroupedByExam", resultsGroupedByExam),
-//                Pair("resultsGroupedByExamMap", resultsGroupedByExamMap),
-//                Pair("resultsGroupingByExam", resultsGroupingByExam),
+                Pair("averageScoresByExam",     averageScoresByExam.joinToString(separator = "\n ", prefix = "[", postfix = "]") {
+                    "examCode='${it.examCode}', examName='${it.examName}', averageScore=${it.averageScore}"
+                })
             )
         )
-        val totalAverage : Double = 0.0
+
+        averageScoresByExam.forEach {
+            mapExamToResult.add(Pair(it.examName!!, it.averageScore!!))
+        }
+
+        val totalNumberOfAttemptedExams : Int = averageScoresByExam.size
+        val totalAverageOfAttemptedExams  = averageScoresByExam.sumOf { it.averageScore!! }
+        val totalAverage : Double = totalAverageOfAttemptedExams / totalNumberOfAttemptedExams
 
         val getStudentStatsDto: GetStudentStatsDto = GetStudentStatsDto(
             examResultMap = mapExamToResult,
