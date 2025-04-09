@@ -36,11 +36,11 @@ class ResultServiceImpl(
                 score = score
             )
 
-            val resultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
+            val existingResultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
 
-            if (resultList.isNotEmpty()) {
-                attemptNoIncrement(resultList, result)
-            }
+
+            attemptNoIncrement(existingResultList, result)
+
             return resultRepository.saveAndFlush(result)
         } catch (e: Exception) {
             throw RuntimeException(e)
@@ -125,13 +125,17 @@ class ResultServiceImpl(
     }
 
     private fun attemptNoIncrement(
-        resultList: List<Result>,
+        existingResultList: List<Result>,
         result: Result
     ) {
         try {
-            result.attemptNo = resultList.sortedBy(Result::attemptNo)
-                .get(0)
-                .incrementAttemptNo()
+            var currentHighestAttemptNumber : Int = 0
+            if (existingResultList.isEmpty()) {
+                currentHighestAttemptNumber = 0
+            } else {
+                currentHighestAttemptNumber = existingResultList.size
+            }
+            result.attemptNo = currentHighestAttemptNumber + 1
         } catch (e: Exception) {
             throw RuntimeException("Unable to increment attempt number. examCode: ${result.exam!!.code}, " +
                     "userCode: ${result.student!!.code}, code: ${result.code}")
