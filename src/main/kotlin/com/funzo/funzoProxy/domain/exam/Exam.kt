@@ -18,17 +18,17 @@ data class Exam(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_code", referencedColumnName = "code", nullable = false)
-    val user: User? = null,
+    var user: User? = null,
 
     @Column(unique = true, name = "code", nullable = false)
-    val code: String? = null,
+    var code: String? = null,
 
     @OneToMany(mappedBy = "exam", cascade = [CascadeType.ALL],
         orphanRemoval = true, fetch = FetchType.LAZY)
-    val questions: MutableList<Question>? = mutableListOf(),
+    var questions: MutableList<Question>? = mutableListOf(),
 
     @Column(name= "description", nullable = false)
-    val description: String? = null,
+    var description: String? = null,
 ) {
     constructor(code: String, subject: Subject, user: User, description: String)
             : this(id = null, subject = subject,code = code, user = user, description = description)

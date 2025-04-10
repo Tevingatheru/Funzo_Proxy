@@ -13,4 +13,5 @@ interface UserService {
     fun getTotalTeacherCount(): Int
     fun getTotalStudentCount(): Int
     fun findTeacherByCode(code: String): User
+    fun userOfTypeExists(userCode:String, userType: UserType): Boolean
 }

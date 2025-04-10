@@ -4,10 +4,10 @@ import com.funzo.funzoProxy.application.command.CreateResultCommand
 import com.funzo.funzoProxy.application.command.DeleteResultByCodeCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateResultRequest
-import com.funzo.funzoProxy.application.query.FetchResultsByExamCodeAndUserCodeQuery
-import com.funzo.funzoProxy.application.query.FetchUserByCodeQuery
-import com.funzo.funzoProxy.application.query.FindAllResultsQuery
-import com.funzo.funzoProxy.application.query.FindResultsByUserCodeQuery
+import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByAdminCodeResponse
+import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByStudentCodeResponse
+import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByTeacherCodeResponse
+import com.funzo.funzoProxy.application.query.*
 import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.*
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
@@ -81,6 +81,36 @@ class ResultController(
     fun deleteByCode(@PathVariable code: String) {
         try {
             commandBus.dispatch(DeleteResultByCodeCommand(code = code))
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/student/stats/")
+    fun getStudentStats(@RequestParam(value = "studentCode") studentCode: String): GetResultsStatsByStudentCodeResponse {
+        try {
+            val response : GetResultsStatsByStudentCodeResponse = queryBus.execute(GetResultsStatsByStudentCodeQuery(studentCode = studentCode))
+            return response
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/teacher/stats/")
+    fun getTeacherStats(@RequestParam(value = "teacherCode") teacherCode: String): GetResultsStatsByTeacherCodeResponse {
+        try {
+            val response: GetResultsStatsByTeacherCodeResponse = queryBus.execute(GetResultsStatsByTeacherCodeQuery(teacherCode = teacherCode))
+            return response
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/admin/stats/")
+    fun getAdminStats(@RequestParam(value = "adminCode") adminCode: String): GetResultsStatsByAdminCodeResponse {
+        try {
+            val response: GetResultsStatsByAdminCodeResponse = queryBus.execute(GetResultsStatsByAdminCodeQuery(adminCode = adminCode))
+            return response
         } catch (e: Exception) {
             throw RuntimeException(e)
         }

@@ -1,6 +1,10 @@
 package com.funzo.funzoProxy.domain.result
 
+import com.funzo.funzoProxy.domain.user.UserType
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.AllExamStatsDto
+import com.funzo.funzoProxy.infrastructure.dto.GetStatsDto
+import com.funzo.funzoProxy.infrastructure.jpa.projection.AverageScoreProjection
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository
@@ -11,6 +15,8 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
+private const val TAG : String = "ResultServiceImpl"
 
 @Service
 @Transactional
@@ -33,11 +39,11 @@ class ResultServiceImpl(
                 score = score
             )
 
-            val resultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
+            val existingResultList = resultRepository.findByExamCodeAndUserCode(examCode, userCode)
 
-            if (resultList.isNotEmpty()) {
-                attemptNoIncrement(resultList, result)
-            }
+
+            attemptNoIncrement(existingResultList, result)
+
             return resultRepository.saveAndFlush(result)
         } catch (e: Exception) {
             throw RuntimeException(e)
@@ -80,21 +86,92 @@ class ResultServiceImpl(
     }
 
     override fun deleteByCode(code: String) {
-        try{
+        try {
             resultRepository.deleteByCode(code = code)
         } catch (e: Exception) {
             throw RuntimeException("Unable to delete result with code: $code", e)
         }
     }
 
+    override fun getStudentStatsByCode(userCode: String): GetStatsDto {
+        val mapExamToResult: MutableList<Pair<String, Double>> = mutableListOf()
+
+        val averageScoresByExam = resultRepository.findAverageScoresByExam(studentCode = userCode)
+        LoggerUtils.log(
+            LogLevel.INFO,
+            message = "getStudentStatsByCode",
+            className = this::class.java,
+            diagnosisMap = mapOf(
+                Pair("averageScoresByExam",     averageScoresByExam.joinToString(separator = "\n ", prefix = "[", postfix = "]") {
+                    "examCode='${it.examCode}', examName='${it.examName}', averageScore=${it.averageScore}"
+                })
+            )
+        )
+
+        mapAverageScoreProjectionToDto(averageScoresByExam, mapExamToResult)
+
+        val totalNumberOfAttemptedExams : Int = averageScoresByExam.size
+        val totalAverageOfAttemptedExams  = averageScoresByExam.sumOf { it.averageScore!! }
+        val totalAverage : Double = totalAverageOfAttemptedExams / totalNumberOfAttemptedExams
+
+        val getStatsDto: GetStatsDto = GetStatsDto(
+            examResultMap = mapExamToResult,
+            overallAverage = totalAverage
+        )
+
+        return getStatsDto
+    }
+
+    override fun getTeacherStatsByUserCode(userCode: String): GetStatsDto {
+        val teacherResults = resultRepository.findAverageExamPerformanceByTeacherCode(teacherCode = userCode)
+        var examResultMap: MutableList<Pair<String, Double>> = mutableListOf()
+
+        val totalNumberOfAttemptedExams : Int = teacherResults.size
+        val totalAverageOfAttemptedExams  = teacherResults.sumOf { it.averageScore!! }
+        val totalAverage : Double = totalAverageOfAttemptedExams / totalNumberOfAttemptedExams
+
+        mapAverageScoreProjectionToDto(teacherResults, examResultMap)
+
+        return GetStatsDto(
+            examResultMap = examResultMap,
+            overallAverage = totalAverage
+        )
+    }
+
+    override fun getAllExamStats(userCode: String): AllExamStatsDto {
+        if (userRepository.findByCode(userCode).type == UserType.ADMINISTRATOR) {
+            val response: List<AverageScoreProjection> = resultRepository.getAllExamsAveragePerformance()
+
+            val examMap: MutableList<Pair<String, Double>> = mutableListOf()
+            mapAverageScoreProjectionToDto(response, examMap)
+            val allExamStatsDto = AllExamStatsDto(examResultMap = examMap)
+            return allExamStatsDto
+        } else {
+            throw IllegalArgumentException("User is not an administrator.")
+        }
+    }
+
+    private fun mapAverageScoreProjectionToDto(
+        teacherResults: List<AverageScoreProjection>,
+        examResultMap: MutableList<Pair<String, Double>>
+    ) {
+        teacherResults.forEach {
+            examResultMap.add(Pair(it.examName!!, it.averageScore!!))
+        }
+    }
+
     private fun attemptNoIncrement(
-        resultList: List<Result>,
+        existingResultList: List<Result>,
         result: Result
     ) {
         try {
-            result.attemptNo = resultList.sortedBy(Result::attemptNo)
-                .get(0)
-                .incrementAttemptNo()
+            var currentHighestAttemptNumber : Int = 0
+            if (existingResultList.isEmpty()) {
+                currentHighestAttemptNumber = 0
+            } else {
+                currentHighestAttemptNumber = existingResultList.size
+            }
+            result.attemptNo = currentHighestAttemptNumber + 1
         } catch (e: Exception) {
             throw RuntimeException("Unable to increment attempt number. examCode: ${result.exam!!.code}, " +
                     "userCode: ${result.student!!.code}, code: ${result.code}")

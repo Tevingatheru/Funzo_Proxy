@@ -11,7 +11,7 @@ data class TrueOrFalseOption(
     @Column(name = "correct_option")
     var correctOption: Boolean? = null
 ): Option(){
-    constructor(correctOption: Boolean, code: String, question: Question)
+    constructor(correctOption: Boolean, code: String?, question: Question)
             : this(correctOption = correctOption) {
         this.code = code
         this.question = question

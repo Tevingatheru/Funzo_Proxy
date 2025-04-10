@@ -141,6 +141,12 @@ class UserServiceImpl(
         }
     }
 
+    override fun userOfTypeExists(userCode: String, userType: UserType): Boolean {
+        val user = findByCode(code = userCode)
+
+        return user.type!! == userType
+    }
+
     private fun saveUser(user: User) = userRepository.saveAndFlush(user)
 
     private fun noDuplicate(userType: String, email: String) =

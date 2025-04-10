@@ -2,10 +2,8 @@ package com.funzo.funzoProxy.application.query.handler
 
 import com.funzo.funzoProxy.application.mapper.OptionMapper
 import com.funzo.funzoProxy.application.query.GetQuestionOptionsQuery
-import com.funzo.funzoProxy.domain.option.Option
 import com.funzo.funzoProxy.domain.option.OptionService
 import com.funzo.funzoProxy.infrastructure.dto.OptionDto
-import com.funzo.funzoProxy.infrastructure.dto.OptionListDto
 import org.springframework.stereotype.Component
 
 @Component

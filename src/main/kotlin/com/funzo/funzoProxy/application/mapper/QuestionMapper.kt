@@ -7,7 +7,7 @@ import com.funzo.funzoProxy.domain.question.Question
 import com.funzo.funzoProxy.infrastructure.dto.QuestionDto
 import com.funzo.funzoProxy.infrastructure.dto.QuestionListDto
 
-object QuestionDtoMapper {
+object QuestionMapper {
     fun mapToQuestionsByExamCodeResponse(questions: MutableList<Question>): ExamQuestionsDto {
         return ExamQuestionsDto(questions)
     }
