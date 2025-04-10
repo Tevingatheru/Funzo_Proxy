@@ -1,6 +1,7 @@
 package com.funzo.funzoProxy.infrastructure.jpa
 
 import com.funzo.funzoProxy.domain.result.Result
+import com.funzo.funzoProxy.infrastructure.jpa.projection.AverageScoreProjection
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param

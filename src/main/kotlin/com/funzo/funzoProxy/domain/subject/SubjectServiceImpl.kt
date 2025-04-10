@@ -2,6 +2,7 @@ package com.funzo.funzoProxy.domain.subject
 
 import com.funzo.funzoProxy.application.command.CreateSubjectCommand
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
+import com.funzo.funzoProxy.infrastructure.dto.AllSubjectStatsDto
 import com.funzo.funzoProxy.infrastructure.util.LogLevel
 import com.funzo.funzoProxy.infrastructure.util.LoggerUtils
 import com.funzo.funzoProxy.infrastructure.jpa.SubjectRepository
@@ -75,5 +76,18 @@ class SubjectServiceImpl(
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
+    }
+
+    override fun getAllStats(adminCode: String): AllSubjectStatsDto {
+        val count = subjectRepository.count()
+
+        val examCounts = subjectRepository.findExamCountPerSubject()
+        val examCountPerSubject: MutableList<Pair<String, Long>> = mutableListOf()
+
+        examCounts.forEach {
+            examCountPerSubject.add(Pair(it.subjectName!!, it.examCount!!))
+        }
+
+        return AllSubjectStatsDto(subjectCount = count, examCountPerSubject = examCountPerSubject)
     }
 }

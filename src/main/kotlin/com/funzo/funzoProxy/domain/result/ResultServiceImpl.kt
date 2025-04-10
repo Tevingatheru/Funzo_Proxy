@@ -4,7 +4,7 @@ import com.funzo.funzoProxy.domain.user.UserType
 import com.funzo.funzoProxy.infrastructure.GenerateCodeServiceImpl
 import com.funzo.funzoProxy.infrastructure.dto.AllExamStatsDto
 import com.funzo.funzoProxy.infrastructure.dto.GetStatsDto
-import com.funzo.funzoProxy.infrastructure.jpa.AverageScoreProjection
+import com.funzo.funzoProxy.infrastructure.jpa.projection.AverageScoreProjection
 import com.funzo.funzoProxy.infrastructure.jpa.ExamRepository
 import com.funzo.funzoProxy.infrastructure.jpa.ResultRepository
 import com.funzo.funzoProxy.infrastructure.jpa.UserRepository

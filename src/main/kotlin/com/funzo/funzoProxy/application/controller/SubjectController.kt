@@ -7,6 +7,10 @@ import com.funzo.funzoProxy.application.command.UpdateSubjectCommand
 import com.funzo.funzoProxy.application.command.bus.CommandBus
 import com.funzo.funzoProxy.application.controller.request.CreateSubjectRequest
 import com.funzo.funzoProxy.application.controller.request.UpdateSubjectRequest
+import com.funzo.funzoProxy.application.controller.response.GetAllSubjectStatsResponse
+import com.funzo.funzoProxy.application.controller.response.GetResultsStatsByStudentCodeResponse
+import com.funzo.funzoProxy.application.query.GetAllSubjectStatsQuery
+import com.funzo.funzoProxy.application.query.GetResultsStatsByStudentCodeQuery
 import com.funzo.funzoProxy.application.query.GetSubjectByCodeQuery
 import com.funzo.funzoProxy.application.query.bus.QueryBus
 import com.funzo.funzoProxy.infrastructure.dto.CreateSubjectDto
@@ -88,6 +92,16 @@ class SubjectController(
             val query: GetAllSubjectsQuery = GetAllSubjectsQuery()
 
             queryBus.execute(query)
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+    }
+
+    @GetMapping("/admin/stats/")
+    fun getAllStats(@RequestParam(value = "adminCode") adminCode: String): GetAllSubjectStatsResponse {
+        try {
+            val response : GetAllSubjectStatsResponse = queryBus.execute(GetAllSubjectStatsQuery(adminCode = adminCode))
+            return response
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
