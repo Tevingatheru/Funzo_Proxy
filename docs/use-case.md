@@ -41,7 +41,7 @@ firebase -up- auth
 logOut .right.> logIn: <<include>>
 logIn .right.> signUp: <<include>>
 createExam <.right. modifyQ: <<extend>>
-createExam .right.> createQ: <<include>>
+createExam <.right. createQ: <<include>>
 createO .> createQ : <<include>>
 
 auth <|-up- logIn
